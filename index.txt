@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCA - Plano de Contratações Anual | UFFS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            uffs: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80',
+              500: '#16a34a', 600: '#006738', 700: '#00542e', 800: '#004224', 900: '#002f19',
+            },
+            autumn: {
+              bg: '#FDFBF7',        
+              surface: '#FFFFFF',   
+              primary: '#1A4328',   
+              primaryHover: '#13321D',
+              secondary: '#D97726', 
+              secondaryHover: '#B8621D',
+              accent: '#C73E2C',    
+              mustard: '#D1A024',   
+              olive: '#738637',     
+              navy: '#234476',      
+              textMain: '#2B2B2B',
+              textMuted: '#6B7280'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #FDFBF7; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    
+    @media print {
+      body { background-color: #FFFFFF !important; }
+      .no-print { display: none !important; }
+      #mainAppWrapper { min-height: auto !important; }
+      main { padding: 0 !important; }
+      .print-break-inside-avoid { page-break-inside: avoid; }
+      .shadow-sm, .shadow-md, .shadow-lg, .shadow-2xl { box-shadow: none !important; }
+      .border { border-color: #e2e8f0 !important; }
+    }
+  </style>
+</head>
+<body class="text-autumn-textMain min-h-screen flex flex-col antialiased selection:bg-autumn-secondary selection:text-white">
+
+  <!-- TELA DE LOGIN PROFISSIONAL E MODERNA -->
+  <div id="loginGateScreen" class="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-50 via-emerald-50/30 to-slate-100">
+    <div class="absolute top-[5%] left-[5%] w-72 h-72 bg-emerald-200/30 rounded-full blur-[80px] pointer-events-none"></div>
+    <div class="absolute bottom-[5%] right-[5%] w-96 h-96 bg-uffs-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+    
+    <div class="absolute top-[15%] left-[18%] text-emerald-600/10 transform -rotate-12 animate-[pulse_4s_ease-in-out_infinite]"><i data-lucide="bar-chart-2" class="w-32 h-32"></i></div>
+    <div class="absolute bottom-[20%] left-[12%] text-uffs-700/5 transform rotate-12"><i data-lucide="calculator" class="w-40 h-40"></i></div>
+    <div class="absolute top-[20%] right-[15%] text-teal-600/10 transform rotate-6 animate-[pulse_5s_ease-in-out_infinite]"><i data-lucide="trending-up" class="w-28 h-28"></i></div>
+    <div class="absolute bottom-[15%] right-[20%] text-emerald-800/5 transform -rotate-12"><i data-lucide="table" class="w-32 h-32"></i></div>
+
+    <div class="w-full max-w-[420px] relative z-10 px-4">
+      <div class="bg-white/80 backdrop-blur-2xl border border-white/60 rounded-[2.5rem] p-8 sm:p-10 shadow-2xl flex flex-col gap-6">
+        
+        <div class="flex flex-col items-center text-center space-y-4 mb-2">
+          <div class="w-16 h-16 bg-gradient-to-br from-uffs-500 to-uffs-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-uffs-600/30 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+            <i data-lucide="pie-chart" class="w-8 h-8"></i>
+          </div>
+          <div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight leading-none">PCA <span class="text-uffs-600 font-light">Realeza</span></h1>
+            <p class="text-xs text-slate-500 font-bold mt-2 uppercase tracking-widest">Plano de Contratações Anual</p>
+          </div>
+        </div>
+
+        <form onsubmit="window.pcaApp.handleLogin(event)" class="space-y-4 text-sm w-full">
+          <div>
+            <div class="relative">
+              <input type="text" id="gateUser" required placeholder="Usuário ou SIAPE" class="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-uffs-500 focus:border-uffs-500 outline-none bg-slate-50/50 hover:bg-slate-50 focus:bg-white font-bold text-slate-800 transition-all shadow-inner">
+              <i data-lucide="user" class="w-5 h-5 text-slate-400 absolute left-4 top-3.5"></i>
+            </div>
+          </div>
+          <div>
+            <div class="relative">
+              <input type="password" id="gatePass" required placeholder="Senha de acesso" class="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-uffs-500 focus:border-uffs-500 outline-none bg-slate-50/50 hover:bg-slate-50 focus:bg-white font-bold text-slate-800 transition-all shadow-inner">
+              <i data-lucide="key-round" class="w-5 h-5 text-slate-400 absolute left-4 top-3.5"></i>
+            </div>
+          </div>
+          
+          <div id="gateErrorMessage" class="hidden text-[11px] text-rose-600 bg-rose-50 border border-rose-100 p-3 rounded-xl font-bold flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+            <span>Credenciais incorretas. Tente novamente.</span>
+          </div>
+
+          <button type="submit" class="w-full bg-gradient-to-r from-uffs-600 to-uffs-700 hover:from-uffs-700 hover:to-emerald-800 active:scale-[0.98] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-uffs-600/20 flex items-center justify-center gap-2 mt-2">
+            <span>Acessar Plataforma</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+        
+        <div class="text-center pt-5 border-t border-slate-100 space-y-3">
+           <p class="text-[11px] text-slate-500 font-medium">Em caso de dúvidas ou sem acesso, contate a <strong class="text-slate-700">Divisão de Compras</strong>:</p>
+           <div class="flex flex-col items-center justify-center gap-2 text-[11px] font-bold">
+             <a href="https://wa.me/554635438352" target="_blank" class="flex items-center justify-center w-full gap-1.5 text-emerald-600 hover:text-emerald-700 hover:underline bg-emerald-50 px-3 py-2.5 rounded-xl transition border border-emerald-100"><i data-lucide="phone" class="w-4 h-4"></i> WhatsApp: (46) 3543-8352</a>
+             <a href="mailto:dcl.compras.re@uffs.edu.br" class="flex items-center justify-center w-full gap-1.5 text-blue-600 hover:text-blue-700 hover:underline bg-blue-50 px-3 py-2.5 rounded-xl transition border border-blue-100"><i data-lucide="mail" class="w-4 h-4"></i> dcl.compras.re@uffs.edu.br</a>
+           </div>
+        </div>
+      </div>
+      
+      <div class="text-center text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-8 drop-shadow-sm flex items-center justify-center gap-1.5">
+        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse hidden" id="cloudStatusLogin"></div> Desenvolvido por Compras-RE
+      </div>
+    </div>
+  </div>
+
+  <!-- APLICAÇÃO PRINCIPAL -->
+  <div id="mainAppWrapper" class="hidden min-h-screen flex flex-col">
+    <!-- HEADER -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm no-print">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="bg-autumn-primary text-white p-2.5 rounded-xl shadow-sm relative">
+              <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
+              <div id="cloudStatusApp" class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full hidden" title="Sincronizado na Nuvem"></div>
+            </div>
+            <div>
+              <div class="text-[11px] font-extrabold uppercase tracking-wider text-autumn-secondary">Plano de Contratações Anual</div>
+              <div class="text-lg font-black text-autumn-primary leading-tight">PCA • UFFS Realeza</div>
+            </div>
+          </div>
+          
+          <div class="hidden md:flex flex-1 max-w-xl mx-4">
+            <div class="relative w-full">
+              <input type="text" id="globalSearchInput" oninput="window.pcaApp && window.pcaApp.handleSearch(this.value)" placeholder="Pesquise por SIPAC, item, setor, status..." class="w-full pl-11 pr-4 py-2.5 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-autumn-secondary focus:border-transparent bg-gray-50 transition-all placeholder:text-gray-400 text-gray-800 font-medium shadow-inner">
+              <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3 text-gray-400"></i>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div id="userProfileArea" class="flex items-center gap-3"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-autumn-primary text-white shadow-inner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between overflow-x-auto py-2.5 text-xs font-semibold gap-2 custom-scrollbar">
+            <nav id="dynamicNavLinks" class="flex items-center gap-2 flex-nowrap flex-shrink-0"></nav>
+            <div id="windowToggleArea" class="flex-shrink-0 ml-auto flex items-center hidden"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      <!-- ============================================== -->
+      <!-- VIEW: BUSCA GLOBAL -->
+      <!-- ============================================== -->
+      <div id="view-search-results" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i> Resultado da Busca
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Pesquisa Global</h2>
+              <p class="text-xs text-gray-500 mt-1" id="searchResultSubtitle">Resultados encontrados em toda a base do PCA.</p>
+            </div>
+            <button onclick="window.pcaApp.clearSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
+              <i data-lucide="x-circle" class="w-4 h-4 text-gray-500"></i> Fechar Busca
+            </button>
+          </div>
+          <div id="searchResultsContainer" class="space-y-4"></div>
+        </div>
+      </div>
+      
+      <!-- ============================================== -->
+      <!-- VIEW: DASHBOARD / GOVERNANÇA ADMIN             -->
+      <!-- ============================================== -->
+      <div id="view-admin-dashboard" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
+                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Governança
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Painel de Indicadores (PCA)</h2>
+              <p class="text-xs text-gray-500 mt-1">Visão consolidada do planejamento, ranqueamento de setores e composição dos segmentos.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterDashYear" onchange="window.pcaApp.updateAdminDashboard()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPIs -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+             <div class="bg-autumn-bg border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                <i data-lucide="calculator" class="w-20 h-20 absolute -right-4 -bottom-4 text-gray-200 opacity-50"></i>
+                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Total Geral Demandado</span>
+                <div class="text-3xl font-black text-autumn-primary" id="kpiDashTotal">R$ 0,00</div>
+                <div class="text-[11px] text-gray-500 font-semibold mt-2" id="kpiDashCount">0 demandas registradas</div>
+             </div>
+             <div class="bg-green-50 border border-green-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                <i data-lucide="check-circle" class="w-20 h-20 absolute -right-4 -bottom-4 text-green-200 opacity-50"></i>
+                <span class="text-[10px] font-bold text-green-700 uppercase tracking-wider block mb-1">Total Aprovado (Deferido)</span>
+                <div class="text-3xl font-black text-green-700" id="kpiDashAprovado">R$ 0,00</div>
+                <div class="text-[11px] text-green-600 font-semibold mt-2" id="kpiDashAprovadoPct">0% do total planejado</div>
+             </div>
+             <div class="bg-autumn-mustard/10 border border-autumn-mustard/30 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                <i data-lucide="clock" class="w-20 h-20 absolute -right-4 -bottom-4 text-autumn-mustard/20 opacity-50"></i>
+                <span class="text-[10px] font-bold text-autumn-secondary uppercase tracking-wider block mb-1">Pendente de Classificação</span>
+                <div class="text-3xl font-black text-autumn-secondary" id="kpiDashPendente">R$ 0,00</div>
+                <div class="text-[11px] text-autumn-secondary/80 font-semibold mt-2" id="kpiDashPendenteCount">0 demandas na fila</div>
+             </div>
+          </div>
+
+          <!-- Gráficos -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
+                <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-autumn-secondary"></i> Volume por Setor (R$)</h3>
+                <p class="text-[10px] text-gray-500 font-semibold mb-4">Total demandado por cada setor (independente do status).</p>
+                <div class="relative flex-1 min-h-[300px]">
+                   <canvas id="dashSectorChart"></canvas>
+                </div>
+             </div>
+             
+             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
+                <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-autumn-secondary"></i> Distribuição por Segmento</h3>
+                <p class="text-[10px] text-gray-500 font-semibold mb-4">Composição de gastos por segmento (apenas classificados).</p>
+                <div class="relative flex-1 min-h-[300px]">
+                   <canvas id="dashSegmentChart"></canvas>
+                </div>
+             </div>
+          </div>
+          
+          <!-- Lista detalhada Segmento x Setor -->
+          <div class="mt-6 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+             <h3 class="text-sm font-black text-gray-800 mb-4 flex items-center gap-2 border-b border-gray-100 pb-3"><i data-lucide="list-ordered" class="w-4 h-4 text-autumn-secondary"></i> Detalhamento: Segmentos x Setores Demandantes</h3>
+             <div id="dashSegmentBreakdown" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                 <!-- Injetado via JS -->
+             </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ÁREA DO SOLICITANTE                            -->
+      <!-- ============================================== -->
+      
+      <!-- VIEW: NOVA DEMANDA (SOLICITANTE) -->
+      <div id="view-form-demand" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm relative overflow-hidden">
+          
+          <div class="mb-8 border-b border-gray-200 pb-5">
+            <h2 class="text-2xl font-black text-autumn-primary flex items-center gap-2">
+              <i data-lucide="file-plus-2" class="w-6 h-6 text-autumn-secondary"></i> Nova Demanda para o PCA
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">Preencha os dados técnicos e justificativas para a contratação/aquisição.</p>
+          </div>
+
+          <!-- MENSAGEM DE JANELA FECHADA -->
+          <div id="demandLockedMessage" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center flex flex-col items-center justify-center">
+            <div class="bg-red-100 text-red-600 p-5 rounded-full mb-5 shadow-sm"><i data-lucide="lock" class="w-10 h-10"></i></div>
+            <h3 class="text-xl font-black text-gray-800 mb-2">Janela de Cadastros Fechada</h3>
+            <p class="text-sm text-gray-500 max-w-md leading-relaxed">
+              O período para envio de novas demandas para o Plano de Contratações Anual está encerrado no momento, conforme cronograma da Superintendência de Compras. 
+              <br><br><span class="font-bold text-gray-700">Aguarde a próxima abertura da janela.</span>
+            </p>
+          </div>
+
+          <!-- FORMULÁRIO -->
+          <div id="demandFormContainer">
+            <form id="pcaDemandForm" onsubmit="window.pcaApp.submitDemand(event)" class="space-y-8 text-sm">
+              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                  <i data-lucide="user" class="w-4 h-4 text-autumn-secondary"></i> 1. Identificação do Requisitante
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Ano do PCA <span class="text-red-500">*</span></label>
+                    <input type="text" id="demYearPCA" readonly class="w-full px-3 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-500 font-black text-xs cursor-not-allowed select-none focus:outline-none" title="O ano vigente é gerido pelo Agente de Compras.">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Setor Requisitante <span class="text-red-500">*</span></label>
+                    <select id="demSector" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer"></select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Nome do Servidor <span class="text-red-500">*</span></label>
+                    <input type="text" id="demUser" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">CPF do Servidor <span class="text-red-500">*</span></label>
+                    <input type="text" id="demCpf" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-mono font-medium text-xs">
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                  <i data-lucide="package" class="w-4 h-4 text-autumn-secondary"></i> 2. Detalhes do Objeto / Serviço
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
+                      CÓDIGO SIPAC <span class="text-red-500 ml-1">*</span>
+                      <div class="relative group inline-block ml-1.5">
+                        <i data-lucide="info" class="w-4 h-4 text-autumn-secondary cursor-help"></i>
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-lg pointer-events-none leading-relaxed">
+                          Mesmo não tendo um item cadastrado com código, esta caixa deve ser preenchida obrigatoriamente com o número <strong>0</strong>.
+                          <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rotate-45"></div>
+                        </div>
+                      </div>
+                    </label>
+                    <input type="text" id="demCode" required placeholder="Ex: 0 ou 12345" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs font-mono text-autumn-primary">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Unidade de Medida <span class="text-red-500">*</span></label>
+                    <select id="demUnit" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer">
+                      <option value="">Selecione...</option><option value="Unidade">Unidade</option><option value="Bobina">Bobina</option><option value="Caixa">Caixa</option><option value="Dia">Dia</option><option value="Dúzia">Dúzia</option><option value="Fardo">Fardo</option><option value="Frasco">Frasco</option><option value="Galão">Galão</option><option value="Hora">Hora</option><option value="Jogo">Jogo</option><option value="Kit">Kit</option><option value="Lata">Lata</option><option value="Litro">Litro</option><option value="Metro cúbico">Metro cúbico</option><option value="Metro linear">Metro linear</option><option value="Metro quadrado">Metro quadrado</option><option value="Miligrama">Miligrama</option><option value="Mililitro">Mililitro</option><option value="Mês">Mês</option><option value="Pacote">Pacote</option><option value="Palavra">Palavra</option><option value="Par">Par</option><option value="Peça">Peça</option><option value="Quilômetro">Quilômetro</option><option value="Quilo">Quilo</option><option value="Rolo">Rolo</option><option value="Saco">Saco</option><option value="Serviço">Serviço</option><option value="Tonelada">Tonelada</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
+                    Item (Descrição Sucinta) <span class="text-red-500 ml-1">*</span>
+                    <div class="relative group inline-block ml-1.5">
+                      <i data-lucide="info" class="w-4 h-4 text-autumn-secondary cursor-help"></i>
+                      <div class="absolute bottom-full left-0 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-left shadow-lg pointer-events-none leading-relaxed">
+                        Caso não tenha código no SIPAC, este campo deve ser obrigatoriamente preenchido com as informações claras do item desejado. Evite termos genéricos.
+                        <div class="absolute -bottom-1 left-4 w-3 h-3 bg-gray-800 rotate-45"></div>
+                      </div>
+                    </div>
+                  </label>
+                  <input type="text" id="demTitle" required minlength="5" placeholder="Ex: Notebook Core i7 16GB" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm">
+                </div>
+                <div>
+                  <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
+                    Descrição Completa e Detalhada <span class="text-red-500 ml-1">*</span>
+                  </label>
+                  <textarea id="demDesc" required rows="3" minlength="15" placeholder="Especificações técnicas, dimensões, características (Mín. 15 caracteres)..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Quantidade Total (Inteiro) <span class="text-red-500">*</span></label>
+                    <input type="text" id="demQty" required oninput="window.pcaApp.formatQty(this)" placeholder="Apenas números exatos" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-center">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Valor Unit. Estimado <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                      <span class="absolute left-3 top-2 font-black text-gray-400">R$</span>
+                      <input type="text" id="demPrice" required oninput="window.pcaApp.formatMoneyInput(this)" placeholder="0,00" class="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-right">
+                    </div>
+                  </div>
+                  <div class="bg-gray-100 p-2 rounded-xl border border-gray-200 text-right">
+                    <span class="block text-[10px] text-gray-500 font-bold uppercase">Valor Total Estimado</span>
+                    <span id="demTotalDisplay" class="text-lg font-black text-autumn-primary">R$ 0,00</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">Link de Referência (Pesquisa de Preço na Internet)</label>
+                  <input type="url" id="demLink" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs text-blue-600">
+                </div>
+              </div>
+
+              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                  <i data-lucide="calendar-clock" class="w-4 h-4 text-autumn-secondary"></i> 3. Prazos e Justificativas
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Grau de Prioridade <span class="text-red-500">*</span></label>
+                    <select id="demPriority" required onchange="window.pcaApp.togglePriorityJust()" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs cursor-pointer">
+                      <option value="Baixa">Baixa</option>
+                      <option value="Média" selected>Média</option>
+                      <option value="Alta">Alta</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Data final para recebimento <span class="text-red-500">*</span></label>
+                    <input type="date" id="demDate" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs text-gray-800 cursor-pointer">
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Prioridade</label>
+                  <input type="text" id="demPrioJust" disabled placeholder="Só preencher se a prioridade for Alta." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-gray-100 text-gray-500 font-medium text-xs transition-colors">
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Necessidade da Contratação <span class="text-red-500">*</span></label>
+                  <textarea id="demNeedJust" required rows="3" minlength="15" placeholder="Explique o problema e onde o item será aplicado..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
+                </div>
+              </div>
+              <div class="flex justify-end pt-4">
+                <button type="submit" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center gap-2">
+                  <i data-lucide="send" class="w-5 h-5"></i> Enviar Demanda para o PCA
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: MINHAS DEMANDAS (SOLICITANTE) -->
+      <div id="view-my-demands" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <h2 class="text-xl font-black text-autumn-primary">Minhas Demandas Cadastradas</h2>
+              <p class="text-xs text-gray-500 mt-1">Acompanhe as solicitações do seu setor por ano de contratação.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner flex-1 sm:flex-none">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterMyYear" onchange="window.pcaApp.renderMyDemands()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  <option value="all">Todos os Anos PCA</option>
+                </select>
+              </div>
+              <button onclick="window.pcaApp.navigate('form-demand')" class="bg-autumn-secondary hover:bg-autumn-secondaryHover text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                <i data-lucide="plus" class="w-4 h-4"></i> Nova Demanda
+              </button>
+            </div>
+          </div>
+          <div id="myDemandsContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+
+      <!-- ============================================== -->
+      <!-- ÁREA DO ADMIN / AGENTE DE COMPRAS              -->
+      <!-- ============================================== -->
+
+      <!-- VIEW 1: CAIXA DE ENTRADA / INBOX -->
+      <div id="view-admin-inbox" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-olive/20 text-autumn-primary text-[11px] font-bold mb-2 border border-autumn-olive/30">
+                <i data-lucide="inbox" class="w-3.5 h-3.5"></i> Caixa de Entrada
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Demandas Pendentes</h2>
+              <p class="text-xs text-gray-500 mt-1">Aqui constam apenas as demandas novas aguardando classificação técnica.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterAdminInboxYear" onchange="window.pcaApp.renderAdminInbox()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  <option value="all">Todos os Anos</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="adminInboxContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: FILA DE CATALOGAÇÃO -->
+      <div id="view-admin-catalog" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
+                <i data-lucide="tag" class="w-3.5 h-3.5"></i> Pendência de Catálogo
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Solicitar Catalogação</h2>
+              <p class="text-xs text-gray-500 mt-1">Demandas registradas com código SIPAC "0". Cadastre o código definitivo para enviá-las à Entrada.</p>
+            </div>
+          </div>
+          <div id="adminCatalogContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 3: DEMANDAS APROVADAS NO PCA -->
+      <div id="view-admin-approved" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 text-[11px] font-bold mb-2 border border-green-200">
+                <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Oficial
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Demandas do PCA (Aprovadas)</h2>
+              <p class="text-xs text-gray-500 mt-1">Acesso completo e detalhado aos itens que foram classificados e deferidos.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterAdminApprovedYear" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  <option value="all">Todos os Anos</option>
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterAdminApprovedSector" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                </select>
+              </div>
+              <button onclick="window.pcaApp.exportPCAExcel()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                <i data-lucide="download" class="w-4 h-4 text-autumn-secondary"></i> Exportar PCA
+              </button>
+            </div>
+          </div>
+          <div id="adminApprovedContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 3.5: DEMANDAS INDEFERIDAS -->
+      <div id="view-admin-rejected" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 text-[11px] font-bold mb-2 border border-red-200">
+                <i data-lucide="x-octagon" class="w-3.5 h-3.5"></i> Indeferidos
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Demandas Indeferidas</h2>
+              <p class="text-xs text-gray-500 mt-1">Histórico de solicitações que foram negadas/indeferidas no PCA.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRejYear" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  <option value="all">Todos os Anos</option>
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRejSector" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRejSegment" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="adminRejectedContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 4: POR SEGMENTO (Agrupamento SIPAC) -->
+      <div id="view-admin-segments" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[11px] font-bold mb-2 border border-purple-200">
+                <i data-lucide="layers" class="w-3.5 h-3.5"></i> Agrupamento
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Demandas por Segmento</h2>
+              <p class="text-xs text-gray-500 mt-1">Consolide as demandas de todos os setores agrupadas pelo código SIPAC.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterSegYear" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterSegGroup" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="adminSegmentsContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW NOVO: OUTROS ENCAMINHAMENTOS -->
+      <div id="view-admin-routings" class="space-y-6 hidden">
+        <div class="print-only-header text-center mb-8 border-b-2 border-slate-800 pb-4">
+            <h1 class="text-2xl font-black uppercase tracking-wider text-slate-900">Relatório: Outros Encaminhamentos</h1>
+            <p id="pdf-timestamp-routing" class="text-xs text-slate-600 mt-1 font-bold"></p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm no-print">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
+                <i data-lucide="forward" class="w-3.5 h-3.5"></i> Redirecionadas
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Outros Encaminhamentos</h2>
+              <p class="text-xs text-gray-500 mt-1">Lista de demandas que não entrarão no PCA (Ex: Terceirizados, Móveis Padronizados).</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRoutYear" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRoutSector" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                <i data-lucide="list-tree" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterRoutType" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  <option value="all">Todos os Tipos</option>
+                  <option value="É Item da lista dos postos Terceirizados">Postos Terceirizados</option>
+                  <option value="É Item da lista de Móveis Padronizados">Móveis Padronizados</option>
+                  <option value="É Item da lista de Materiais de Expediente Padronizados">Mat. Expediente Padronizados</option>
+                </select>
+              </div>
+              <button onclick="window.pcaApp.printRoutingReport()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
+                <i data-lucide="printer" class="w-4 h-4 text-gray-500"></i> Relatório PDF
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="adminRoutingsContainer" class="space-y-4"></div>
+      </div>
+
+      <!-- VIEW 5: ACOMPANHAMENTO E STATUS (Execução) -->
+      <div id="view-admin-tracking" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold mb-2 border border-amber-200">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Acompanhamento
+              </div>
+              <h2 class="text-2xl font-black text-autumn-primary">Gerenciar Status de Execução</h2>
+              <p class="text-xs text-gray-500 mt-1">Filtre por setor e atualize a situação do processo licitatório/compra para dar feedback ao demandante.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner w-full sm:w-auto">
+                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                <select id="filterTrackSector" onchange="window.pcaApp.renderAdminTracking()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="adminTrackingContainer" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- VIEW 6: CONFIGURAÇÕES (ADMIN) -->
+      <div id="view-admin-settings" class="space-y-6 hidden">
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2">
+                <i data-lucide="calendar-check" class="w-5 h-5 text-autumn-secondary"></i> Ano PCA Vigente
+              </h2>
+              <p class="text-[11px] text-gray-500 mt-1">Defina o ano base atual para fixá-lo no formulário de demandas.</p>
+            </div>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <select id="settingActiveYear" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-sm font-black text-autumn-primary bg-gray-50 cursor-pointer"></select>
+              <button onclick="window.pcaApp.saveActiveYear()" class="bg-autumn-primary text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex items-center gap-2 shadow-sm">
+                <i data-lucide="save" class="w-4 h-4"></i> Salvar Parâmetro
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col lg:flex-row gap-6">
+          <div class="w-full lg:w-1/3 space-y-4 border-b lg:border-b-0 lg:border-r border-gray-100 pb-6 lg:pb-0 lg:pr-6">
+            <div class="border-b border-gray-200 pb-3 flex justify-between items-start mb-4">
+              <div>
+                <h2 id="userFormTitle" class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5 text-autumn-secondary"></i> Cadastrar Usuário</h2>
+              </div>
+              <button type="button" id="cancelUserEditBtn" onclick="window.pcaApp.cancelEditUser()" class="hidden text-[10px] text-gray-600 hover:text-gray-900 font-bold px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg transition border border-gray-300">Cancelar</button>
+            </div>
+            <form id="newUserForm" onsubmit="window.pcaApp.handleCreateUser(event)" class="space-y-3">
+              <input type="hidden" id="editUserId">
+              <div>
+                <label class="block font-bold text-gray-700 mb-1 text-xs">Nome Completo:</label>
+                <input type="text" id="newUserName" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-1 text-xs">CPF:</label>
+                <input type="text" id="newUserCpf" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-1 text-xs">SIAPE (Login):</label>
+                <input type="text" id="newUserLogin" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Setor:</label>
+                    <select id="newUserSector" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer"></select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Perfil:</label>
+                    <select id="newUserRole" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer">
+                        <option value="solicitante">Solicitante</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-1 text-xs">Senha Inicial:</label>
+                <div class="flex gap-2">
+                  <input type="text" id="newUserPassword" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono font-bold text-autumn-primary">
+                  <button type="button" onclick="window.pcaApp.generateRandomPassword()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-xl text-xs font-bold transition border border-gray-200 shadow-sm">Gerar</button>
+                </div>
+              </div>
+              <button type="submit" class="w-full bg-autumn-primary text-white px-3 py-3 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex justify-center items-center gap-2 mt-2 shadow-sm"><i data-lucide="check" class="w-4 h-4"></i> Salvar Acesso</button>
+            </form>
+          </div>
+          
+          <div class="w-full lg:w-2/3 flex flex-col h-[400px]">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-3">
+              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-autumn-secondary"></i> Usuários da Plataforma</h2>
+              <span id="userCountBadge" class="bg-gray-100 border border-gray-200 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">0 cadastrados</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-200 rounded-2xl bg-gray-50/50">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-gray-100/90 sticky top-0 text-gray-500 uppercase tracking-wider text-[10px] font-black backdrop-blur-sm shadow-sm z-10">
+                  <tr><th class="p-3 border-b border-gray-200">Nome / Credenciais</th><th class="p-3 border-b border-gray-200">Setor</th><th class="p-3 border-b border-gray-200">Perfil</th><th class="p-3 border-b border-gray-200 text-center">Ações</th></tr>
+                </thead>
+                <tbody id="usersListContainer" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
+            <div class="border-b border-gray-200 pb-4 mb-4">
+              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-autumn-secondary"></i> Setores Requisitantes</h2>
+            </div>
+            <form onsubmit="window.pcaApp.addSector(event)" class="flex gap-2 mb-4">
+              <input type="text" id="newSectorInput" required placeholder="Novo setor (Ex: ASCOM)..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+              <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
+            </form>
+            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
+              <ul id="sectorsList" class="space-y-2 text-xs"></ul>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
+            <div class="border-b border-gray-200 pb-4 mb-4">
+              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="tags" class="w-5 h-5 text-autumn-secondary"></i> Segmentos de Contratação</h2>
+            </div>
+            <form onsubmit="window.pcaApp.addSegment(event)" class="flex gap-2 mb-4">
+              <input type="text" id="newSegmentInput" required placeholder="Novo segmento..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+              <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
+            </form>
+            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
+              <ul id="segmentsList" class="space-y-2 text-xs"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL DE CLASSIFICAÇÃO ADMIN (FILTROS) -->
+  <div id="classifyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-gray-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+        <h3 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="clipboard-check" class="w-5 h-5 text-autumn-secondary"></i> Classificação Técnica</h3>
+        <button onclick="window.pcaApp.closeClassifyModal()" class="text-gray-400 hover:text-autumn-accent bg-gray-50 p-1.5 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      
+      <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 mb-2">
+        <div class="text-[10px] text-gray-500 font-bold uppercase flex justify-between">
+           <span>Item Analisado</span>
+           <span id="classItemYear" class="text-autumn-secondary font-black"></span>
+        </div>
+        <div id="classItemName" class="text-sm font-black text-autumn-primary truncate mt-0.5">...</div>
+        <div id="classItemSector" class="text-xs font-semibold text-gray-500">...</div>
+      </div>
+
+      <form id="classifyForm" onsubmit="window.pcaApp.saveClassification(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="classDemandId">
+        
+        <div class="bg-white border border-gray-200 p-3 rounded-xl shadow-sm mb-4">
+           <label class="block font-bold text-gray-700 mb-1">Segmento de Contratação <span class="text-red-500">*</span></label>
+           <select id="classSegment" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none bg-gray-50 cursor-pointer">
+           </select>
+        </div>
+
+        <div class="space-y-3 mb-5">
+          <!-- Item 1 -->
+          <div class="flex items-center justify-between bg-white border border-gray-200 p-2.5 rounded-xl shadow-sm">
+            <span class="font-bold text-gray-700 text-xs">Possui Estoque no Almoxarifado?</span>
+            <div class="flex gap-2">
+               <input type="hidden" id="classEstoque" value="Não Avaliado">
+               <button type="button" onclick="window.pcaApp.setClassBtn('classEstoque', 'Sim')" id="btn_classEstoque_Sim" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Sim</button>
+               <button type="button" onclick="window.pcaApp.setClassBtn('classEstoque', 'Não')" id="btn_classEstoque_Não" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Não</button>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="flex items-center justify-between bg-white border border-gray-200 p-2.5 rounded-xl shadow-sm">
+            <span class="font-bold text-gray-700 text-xs">Faz parte do AVN?</span>
+            <div class="flex gap-2">
+               <input type="hidden" id="classAVN" value="Não Avaliado">
+               <button type="button" onclick="window.pcaApp.setClassBtn('classAVN', 'Sim')" id="btn_classAVN_Sim" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Sim</button>
+               <button type="button" onclick="window.pcaApp.setClassBtn('classAVN', 'Não')" id="btn_classAVN_Não" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Não</button>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="flex items-center justify-between bg-white border border-gray-200 p-2.5 rounded-xl shadow-sm">
+            <span class="font-bold text-gray-700 text-xs">Possui Saldo em Ata Vigente?</span>
+            <div class="flex gap-2">
+               <input type="hidden" id="classAta" value="Não Avaliado">
+               <button type="button" onclick="window.pcaApp.setClassBtn('classAta', 'Sim')" id="btn_classAta_Sim" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Sim</button>
+               <button type="button" onclick="window.pcaApp.setClassBtn('classAta', 'Não')" id="btn_classAta_Não" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Não</button>
+            </div>
+          </div>
+          <!-- Item 4 -->
+          <div class="flex items-center justify-between bg-white border border-gray-200 p-2.5 rounded-xl shadow-sm">
+            <span class="font-bold text-gray-700 text-xs">É item de TI?</span>
+            <div class="flex gap-2">
+               <input type="hidden" id="classTI" value="Não Avaliado">
+               <button type="button" onclick="window.pcaApp.setClassBtn('classTI', 'Sim')" id="btn_classTI_Sim" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Sim</button>
+               <button type="button" onclick="window.pcaApp.setClassBtn('classTI', 'Não')" id="btn_classTI_Não" class="px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition">Não</button>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-gray-200">
+        
+        <div>
+             <label class="block font-bold text-gray-900 mb-1">Deferido para o PCA?</label>
+             <select id="classStatusPCA" onchange="window.pcaApp.toggleClassExtras()" class="w-full px-3 py-2.5 rounded-xl border border-gray-400 bg-white font-bold text-autumn-primary cursor-pointer">
+               <option value="Pendente">Aguardando Avaliação</option>
+               <option value="Deferido">Sim, Cadastrar no PCA</option>
+               <option value="Indeferido">Indeferido (Exige Justificativa)</option>
+               <option value="Não Cadastrar">Não Cadastrar (Cancelado/Duplicado)</option>
+               <option value="Outro Encaminhamento">Outro Encaminhamento</option>
+             </select>
+          </div>
+          
+          <div id="boxClassDFD" class="hidden">
+             <label class="block font-bold text-gray-900 mb-1">Número do DFD Gerado <span class="text-red-500">*</span></label>
+             <input type="text" id="classDFD" placeholder="Ex: 123/2026" class="w-full px-3 py-2 rounded-xl border border-gray-400 focus:ring-2 focus:ring-autumn-primary bg-white font-mono font-bold">
+          </div>
+
+          <div id="boxClassReject" class="hidden">
+             <label class="block font-bold text-red-700 mb-1">Motivo do Indeferimento <span class="text-red-500">*</span></label>
+             <textarea id="classRejectReason" rows="2" placeholder="Explique para o setor o motivo da recusa..." class="w-full px-3 py-2 rounded-xl border border-red-300 focus:ring-2 focus:ring-red-400 bg-red-50 text-red-900 font-medium"></textarea>
+          </div>
+
+          <div id="boxClassRoute" class="hidden">
+             <label class="block font-bold text-purple-700 mb-1">Selecione a Lista de Destino <span class="text-red-500">*</span></label>
+             <select id="classRoutingType" class="w-full px-3 py-2.5 rounded-xl border border-purple-300 focus:ring-2 focus:ring-purple-400 bg-purple-50 text-purple-900 font-bold cursor-pointer">
+               <option value="">Selecione...</option>
+               <option value="É Item da lista dos postos Terceirizados">É Item da lista dos postos Terceirizados</option>
+               <option value="É Item da lista de Móveis Padronizados">É Item da lista de Móveis Padronizados</option>
+               <option value="É Item da lista de Materiais de Expediente Padronizados">É Item da lista de Materiais de Expediente Padronizados</option>
+               <option value="É Item da lista de TIC">É Item da lista de TIC</option>
+             </select>
+          </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="window.pcaApp.closeClassifyModal()" class="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 font-semibold hover:bg-gray-100 transition">Cancelar</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-autumn-primary hover:bg-autumn-primaryHover text-white font-bold shadow-sm transition">Salvar Análise</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE VISUALIZAÇÃO COMPLETA DA DEMANDA -->
+  <div id="viewDemandModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl border border-gray-200 space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-start justify-between border-b border-gray-200 pb-4">
+        <div>
+           <div class="flex items-center gap-2 mb-2">
+             <span id="vdYear" class="font-mono text-xs font-black px-2 py-0.5 rounded border bg-gray-100 text-gray-800">...</span>
+           </div>
+           <h3 id="vdTitle" class="text-xl font-black text-autumn-primary leading-tight">...</h3>
+        </div>
+        <button onclick="window.pcaApp.closeViewDemandModal()" class="text-gray-400 hover:text-autumn-accent bg-gray-50 p-2 rounded-xl"><i data-lucide="x" class="w-6 h-6"></i></button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Informações do Solicitante</span>
+            <div id="vdSector" class="text-sm font-black text-gray-800 uppercase mb-0.5">...</div>
+            <div id="vdUser" class="text-xs text-gray-600 font-medium capitalize">...</div>
+            <div id="vdCpf" class="text-xs text-gray-500 font-mono mt-1">...</div>
+            <div class="text-[10px] text-gray-400 mt-2 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Enviado em: <span id="vdDateStamp"></span></div>
+         </div>
+         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col justify-center items-end text-right">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Dados Financeiros Estimados</span>
+            <div id="vdQtyUnit" class="text-xs font-bold text-gray-700 mb-1">...</div>
+            <div id="vdTotal" class="text-2xl font-black text-autumn-secondary">...</div>
+            <div id="vdUnitVal" class="text-[10px] text-gray-500 mt-1">...</div>
+         </div>
+      </div>
+
+      <div class="space-y-4">
+         <div>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Descrição Técnica Completa</span>
+            <div id="vdDesc" class="bg-white border border-gray-200 p-4 rounded-xl text-sm text-gray-700 whitespace-pre-wrap break-words leading-relaxed shadow-sm">...</div>
+         </div>
+         <div>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Justificativa da Necessidade</span>
+            <div id="vdNeedJust" class="bg-white border border-gray-200 p-4 rounded-xl text-sm text-gray-700 whitespace-pre-wrap break-words leading-relaxed shadow-sm">...</div>
+         </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+         <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+            <span class="text-[10px] font-bold text-gray-400 uppercase block">Cód. SIPAC</span>
+            <span id="vdSipac" class="text-sm font-black text-gray-800 font-mono">...</span>
+         </div>
+         <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+            <span class="text-[10px] font-bold text-gray-400 uppercase block">Data Desejada</span>
+            <span id="vdDateNeed" class="text-sm font-black text-gray-800">...</span>
+         </div>
+         <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+            <span class="text-[10px] font-bold text-gray-400 uppercase block">Prioridade</span>
+            <span id="vdPriority" class="text-sm font-black text-gray-800">...</span>
+         </div>
+         <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm flex flex-col justify-center items-center">
+            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Link de Ref.</span>
+            <a id="vdLink" href="#" target="_blank" class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg w-full truncate text-center transition shadow-sm">Acessar Link</a>
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-[200] transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-gray-900 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-bold border border-gray-700">
+      <div id="toastIcon"></div><span id="toastMessage">Sucesso!</span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyB8alUa1e_iBW0wd9by5qZgUl_j2Mtcy1A",
+        authDomain: "avn-uffs-realeza.firebaseapp.com",
+        projectId: "avn-uffs-realeza",
+        storageBucket: "avn-uffs-realeza.firebasestorage.app",
+        messagingSenderId: "454807679068",
+        appId: "1:454807679068:web:204af833b3c705f90d3699"
+      };
+
+      const DEFAULT_USERS = [
+        { id: 'usr_admin', name: 'Agente de Compras UFFS', login: 'admin', password: '123', role: 'admin', sector: 'COMPRAS', cpf: '000.000.000-00' }
+      ];
+
+      const DEFAULT_SECTORS = [
+        "ASCOM", "DIR + SEDOC", "UCEN", "SUHVU", "ADM", "ASSGAS", "ASSGP", "ASSINFR", 
+        "ASSLOS", "ASSPLAN", "ACAD", "BIB", "SAE", "ASSAC", "SECAC", "SEGEC", "CLAB"
+      ];
+
+      const DEFAULT_SEGMENTS = [
+        "Contratação de serviços gráficos", "Aquisição de materiais e equipamentos para o Restaurante Universitário",
+        "Aquisição de EPIs, EPCs e Materiais Médico-Hospitalares", "Aquisição de utensílios de copa e cozinha",
+        "Aquisição de materiais de expediente", "Aquisição de mobiliário padrão", "Aquisição de itens de TIC"
+      ];
+
+      function loadStorage(key, fallback) {
+        try { const i = localStorage.getItem(key); if (i) return JSON.parse(i); } catch (e) {} return fallback;
+      }
+      function saveStorage(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} }
+      const fmtMoney = (val) => (Number(val)||0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      
+      const parseDate = (dStr) => { 
+          if(!dStr) return '';
+          const d = new Date(dStr); 
+          if(isNaN(d.getTime())) return '-';
+          return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}); 
+      };
+      
+      const parseDateOnly = (dStr) => {
+          if(!dStr) return '-';
+          if(dStr.includes('-')) return dStr.split('-').reverse().join('/');
+          return dStr;
+      };
+      
+      function getYearBadgeClass(year) {
+          const m = {
+             'PCA-2025': 'bg-gray-100 text-gray-800 border-gray-300',
+             'PCA-2026': 'bg-blue-100 text-blue-800 border-blue-300',
+             'PCA-2027': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+             'PCA-2028': 'bg-purple-100 text-purple-800 border-purple-300',
+             'PCA-2029': 'bg-amber-100 text-amber-800 border-amber-300',
+             'PCA-2030': 'bg-teal-100 text-teal-800 border-teal-300',
+             'PCA-2031': 'bg-rose-100 text-rose-800 border-rose-300',
+             'PCA-2032': 'bg-indigo-100 text-indigo-800 border-indigo-300',
+             'PCA-2033': 'bg-cyan-100 text-cyan-800 border-cyan-300',
+             'PCA-2034': 'bg-orange-100 text-orange-800 border-orange-300',
+             'PCA-2035': 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-300',
+          };
+          return m[year] || 'bg-slate-100 text-slate-800 border-slate-300';
+      }
+
+      function getExecutionBadge(status) {
+          if (status === 'DISPONÍVEL PARA EMPENHO' || status === 'EXECUTADA') return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+          if (status === 'EM EXECUÇÃO') return 'bg-blue-100 text-blue-800 border-blue-300';
+          if (status === 'NÃO SERÁ EXECUTADA') return 'bg-red-100 text-red-800 border-red-300';
+          return 'bg-gray-100 text-gray-800 border-gray-300';
+      }
+
+      const state = {
+        currentUser: null, 
+        currentView: 'form-demand',
+        activeYearPCA: loadStorage('pca_active_year', 'PCA-2026'),
+        isWindowOpen: loadStorage('pca_window_open', true),
+        users: loadStorage('pca_users', [...DEFAULT_USERS]), 
+        sectors: loadStorage('pca_sectors', DEFAULT_SECTORS).sort((a,b) => a.localeCompare(b)),
+        segments: loadStorage('pca_segments', DEFAULT_SEGMENTS).sort((a,b) => a.localeCompare(b)),
+        demands: loadStorage('pca_demands', [])
+      };
+
+      state.demands.forEach(d => {
+         if(!d.executionStatus) d.executionStatus = 'PLANEJADA';
+         if(!d.executionReason) d.executionReason = '';
+         if(!d.pcaFeedback) d.pcaFeedback = '';
+         if(!d.routingDetail) d.routingDetail = '';
+      });
+
+      const savedUserId = sessionStorage.getItem('pca_active_user_id');
+      if (savedUserId) state.currentUser = state.users.find(u => u.id === savedUserId) || null;
+
+      const pcaApp = {
+        init() { 
+          lucide.createIcons();
+          this.checkAccessGate(); 
+          if(state.currentUser) {
+            this.navigate(state.currentUser.role === 'admin' ? 'admin-dashboard' : 'form-demand');
+          }
+          this.setMinimumDate();
+          this.checkFormLock();
+          this.initAsyncCloud();
+        },
+
+        async initAsyncCloud() {
+          const stApp = document.getElementById('cloudStatusApp');
+          const stLogin = document.getElementById('cloudStatusLogin');
+          try {
+            const { initializeApp } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
+            const { getAuth, signInAnonymously } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
+            const { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+            
+            const db = getFirestore(initializeApp(FIREBASE_CONFIG)); 
+            try { await signInAnonymously(getAuth()); } catch(e){}
+            
+            window.cloudSyncInstance={ 
+                saveDemand: d => setDoc(doc(db,'pca_demands', d.id), d), 
+                saveUser: u => setDoc(doc(db,'pca_users', u.id), u), 
+                deleteUser: id => deleteDoc(doc(db,'pca_users', id)),
+                saveMeta: (id, data) => setDoc(doc(db,'pca_meta', id), {list: data})
+            };
+            
+            onSnapshot(collection(db,'pca_demands'), s=>{ 
+                if(!s.empty){ 
+                    state.demands=[]; 
+                    s.forEach(d=>state.demands.push(d.data())); 
+                    state.demands.sort((a,b)=>new Date(b.dateStamp)-new Date(a.dateStamp)); 
+                    pcaApp.persistData(); 
+                    if(state.currentView === 'my-demands') pcaApp.renderMyDemands();
+                    if(state.currentView === 'admin-inbox') pcaApp.renderAdminInbox();
+                    if(state.currentView === 'admin-catalog') pcaApp.renderAdminCatalog();
+                    if(state.currentView === 'admin-approved') pcaApp.renderAdminApproved();
+                    if(state.currentView === 'admin-rejected') pcaApp.renderAdminRejected();
+                    if(state.currentView === 'admin-segments') pcaApp.renderAdminSegments();
+                    if(state.currentView === 'admin-routings') pcaApp.renderAdminRoutings();
+                    if(state.currentView === 'admin-tracking') pcaApp.renderAdminTracking();
+                    if(state.currentView === 'admin-dashboard') pcaApp.updateAdminDashboard();
+                    if(state.currentView === 'search-results') {
+                         const q = document.getElementById('globalSearchInput').value;
+                         if(q) pcaApp.renderSearchResults(q.trim().toLowerCase());
+                    }
+                } 
+            });
+
+            onSnapshot(collection(db,'pca_users'), s=>{ 
+                if(!s.empty){ 
+                    state.users=[]; 
+                    s.forEach(d=>state.users.push(d.data())); 
+                    
+                    if(!state.users.find(u => u.login === 'admin')) {
+                        state.users.push(DEFAULT_USERS[0]);
+                        if(window.cloudSyncInstance) window.cloudSyncInstance.saveUser(DEFAULT_USERS[0]);
+                    }
+                    pcaApp.persistData(); 
+                    if(state.currentView === 'admin-settings') pcaApp.renderSettings();
+                } else {
+                    state.users = [...DEFAULT_USERS];
+                    if(window.cloudSyncInstance) window.cloudSyncInstance.saveUser(DEFAULT_USERS[0]);
+                }
+            });
+
+            onSnapshot(collection(db,'pca_meta'), s=>{
+                if(!s.empty) {
+                    s.forEach(d => {
+                        if(d.id === 'sectors') state.sectors = (d.data().list || DEFAULT_SECTORS).sort((a,b) => a.localeCompare(b));
+                        if(d.id === 'segments') state.segments = (d.data().list || DEFAULT_SEGMENTS).sort((a,b) => a.localeCompare(b));
+                    });
+                    pcaApp.persistData();
+                    pcaApp.populateSelects();
+                    if(state.currentView === 'admin-settings') pcaApp.renderSettings();
+                }
+            });
+
+            if(stApp) stApp.classList.remove('hidden');
+            if(stLogin) stLogin.classList.remove('hidden');
+            
+          } catch(e) { 
+              console.error("Firebase error", e);
+              pcaApp.showToast('Rodando em modo Offline.', 'alert');
+          }
+        },
+
+        autoFillDemandForm() {
+            if(state.currentUser && state.currentUser.role !== 'admin') {
+                const u = state.currentUser;
+                const userEl = document.getElementById('demUser');
+                const cpfEl = document.getElementById('demCpf');
+                const sectorEl = document.getElementById('demSector');
+                
+                if(userEl) {
+                    userEl.value = u.name;
+                    userEl.setAttribute('readonly', true);
+                    userEl.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                }
+                if(cpfEl && u.cpf) {
+                    cpfEl.value = u.cpf;
+                    cpfEl.setAttribute('readonly', true);
+                    cpfEl.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                }
+                if(sectorEl && u.sector) {
+                    sectorEl.value = u.sector;
+                    sectorEl.setAttribute('disabled', true);
+                    sectorEl.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                }
+            }
+        },
+
+        setMinimumDate() {
+            const activeY = parseInt(state.activeYearPCA.replace(/\D/g, ''));
+            const dateInput = document.getElementById("demDate");
+            if(!dateInput) return;
+            
+            const today = new Date();
+            let minDateStr = `${activeY}-01-01`;
+            
+            if (today.getFullYear() === activeY) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                minDateStr = tomorrow.toISOString().split('T')[0];
+            } else if (today.getFullYear() > activeY) {
+                minDateStr = `${activeY}-01-01`;
+            }
+            
+            const maxDateStr = `${activeY}-12-31`;
+            
+            dateInput.setAttribute("min", minDateStr);
+            dateInput.setAttribute("max", maxDateStr);
+        },
+
+        checkFormLock() {
+            const formCont = document.getElementById('demandFormContainer');
+            const lockMsg = document.getElementById('demandLockedMessage');
+            if (!formCont || !lockMsg) return;
+            
+            if (state.isWindowOpen) {
+                formCont.classList.remove('hidden');
+                lockMsg.classList.add('hidden');
+            } else {
+                formCont.classList.add('hidden');
+                lockMsg.classList.remove('hidden');
+            }
+        },
+
+        toggleWindow() {
+            state.isWindowOpen = !state.isWindowOpen;
+            this.persistData();
+            this.renderDynamicNav();
+            this.checkFormLock();
+            this.showToast(state.isWindowOpen ? 'Janela do PCA ABERTA para envios.' : 'Janela do PCA FECHADA.', state.isWindowOpen ? 'success' : 'alert');
+        },
+
+        togglePriorityJust() {
+            const prio = document.getElementById('demPriority').value;
+            const just = document.getElementById('demPrioJust');
+            if(prio === 'Alta') {
+                just.disabled = false;
+                just.required = true;
+                just.classList.remove('bg-gray-100', 'text-gray-500');
+                just.classList.add('bg-white', 'text-gray-900');
+                just.placeholder = "Obrigatório para Prioridade Alta...";
+            } else {
+                just.disabled = true;
+                just.required = false;
+                just.value = "";
+                just.classList.add('bg-gray-100', 'text-gray-500');
+                just.classList.remove('bg-white', 'text-gray-900');
+                just.placeholder = "Só preencher se a prioridade for Alta.";
+            }
+        },
+
+        maskCPF(i) {
+            let v = i.value.replace(/\D/g, "");
+            v = v.replace(/(\d{3})(\d)/, "$1.$2");
+            v = v.replace(/(\d{3})(\d)/, "$1.$2");
+            v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            i.value = v;
+        },
+
+        isValidCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf == '' || cpf.length != 11 || /^(.)\1+$/.test(cpf)) return false;
+            let add = 0, rev;
+            for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+            rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11) rev = 0;
+            if (rev != parseInt(cpf.charAt(9))) return false;
+            add = 0;
+            for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+            rev = 11 - (add % 11);
+            if (rev == 10 || rev == 11) rev = 0;
+            if (rev != parseInt(cpf.charAt(10))) return false;
+            return true;
+        },
+
+        formatQty(i) { i.value = i.value.replace(/\D/g, ''); this.calculateTotal(); },
+        
+        formatMoneyInput(i) {
+            let v = i.value.replace(/\D/g,'');
+            if(v === '') { i.value = ''; this.calculateTotal(); return; }
+            v = (parseFloat(v)/100).toFixed(2) + '';
+            v = v.replace(".", ",");
+            v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+            v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+            i.value = v;
+            this.calculateTotal();
+        },
+        
+        parseMoney(str) {
+            if(!str) return 0;
+            return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+        },
+        
+        checkAccessGate() {
+          const gate = document.getElementById('loginGateScreen'), wrap = document.getElementById('mainAppWrapper');
+          if (!state.currentUser) {
+            if(gate) gate.classList.remove('hidden'); if(wrap) wrap.classList.add('hidden');
+          } else {
+            if(gate) gate.classList.add('hidden'); if(wrap) wrap.classList.remove('hidden');
+            this.updateHeaderProfile(); this.renderDynamicNav(); this.populateSelects(); this.checkFormLock();
+          }
+        },
+        
+        handleLogin(e) {
+          e.preventDefault();
+          const userVal = document.getElementById('gateUser').value.trim(), passVal = document.getElementById('gatePass').value.trim(), errMsg = document.getElementById('gateErrorMessage');
+          const found = state.users.find(u => u.login.toLowerCase() === userVal.toLowerCase() && u.password === passVal);
+          if (found) {
+            state.currentUser = found; 
+            sessionStorage.setItem('pca_active_user_id', found.id); 
+            if(errMsg) errMsg.classList.add('hidden'); 
+            this.checkAccessGate(); 
+            this.navigate(found.role === 'admin' ? 'admin-dashboard' : 'form-demand'); 
+            this.showToast(`Bem-vindo(a), ${found.name}!`, 'success');
+          } else { if(errMsg) errMsg.classList.remove('hidden'); }
+        },
+        
+        logout() {
+          state.currentUser = null; 
+          sessionStorage.removeItem('pca_active_user_id'); 
+          document.getElementById('gateUser').value=''; document.getElementById('gatePass').value='';
+          this.checkAccessGate(); this.showToast('Sessão encerrada com segurança.', 'info');
+        },
+        
+        persistData() { 
+          saveStorage('pca_users', state.users);
+          saveStorage('pca_sectors', state.sectors); 
+          saveStorage('pca_segments', state.segments); 
+          saveStorage('pca_demands', state.demands); 
+          saveStorage('pca_active_year', state.activeYearPCA);
+          saveStorage('pca_window_open', state.isWindowOpen); 
+        },
+        
+        navigate(viewId) {
+          if (!state.currentUser) return this.checkAccessGate();
+          state.currentView = viewId;
+          
+          const allViews = [
+            'view-form-demand', 'view-my-demands', 
+            'view-admin-inbox', 'view-admin-catalog', 'view-admin-approved', 
+            'view-admin-rejected', 'view-admin-segments', 'view-admin-routings', 'view-admin-tracking', 'view-admin-settings', 'view-search-results', 'view-admin-dashboard'
+          ];
+          allViews.forEach(id => {
+            const el = document.getElementById(id); if (el) el.classList.add('hidden');
+          });
+          const act = document.getElementById(`view-${viewId}`); if (act) act.classList.remove('hidden');
+          
+          if (viewId === 'my-demands') this.renderMyDemands();
+          if (viewId === 'admin-inbox') this.renderAdminInbox();
+          if (viewId === 'admin-catalog') this.renderAdminCatalog();
+          if (viewId === 'admin-approved') { this.populateAdminApprovedFilters(); this.renderAdminApproved(); }
+          if (viewId === 'admin-rejected') { this.populateAdminRejectedFilters(); this.renderAdminRejected(); }
+          if (viewId === 'admin-segments') { this.populateSegmentFilters(); this.renderAdminSegments(); }
+          if (viewId === 'admin-routings') { this.populateAdminRejectedFilters(); this.renderAdminRoutings(); }
+          if (viewId === 'admin-tracking') { this.populateTrackingSectors(); this.renderAdminTracking(); }
+          if (viewId === 'admin-settings') this.renderSettings();
+          if (viewId === 'admin-dashboard') this.updateAdminDashboard();
+          
+          this.autoFillDemandForm();
+          
+          window.scrollTo({ top: 0, behavior: 'smooth' }); this.renderDynamicNav(); lucide.createIcons(); this.checkFormLock();
+        },
+        
+        renderDynamicNav() {
+          const nav = document.getElementById('dynamicNavLinks'); 
+          const toggleArea = document.getElementById('windowToggleArea');
+          if (!nav || !state.currentUser) return;
+          
+          let h = '';
+          const aC = 'bg-autumn-primaryHover text-white shadow-inner font-bold rounded-xl';
+          const iC = 'text-gray-200 hover:bg-autumn-primaryHover hover:text-white transition rounded-xl';
+
+          if (state.currentUser.role === 'admin') {
+            h += `<button onclick="window.pcaApp.navigate('admin-dashboard')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-dashboard'?aC:iC}"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Governança</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-inbox')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-inbox'?aC:iC}"><i data-lucide="inbox" class="w-4 h-4"></i> Entrada</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-catalog')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-catalog'?aC:iC}"><i data-lucide="tag" class="w-4 h-4"></i> Catalogação</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-approved')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-approved'?aC:iC}"><i data-lucide="check-square" class="w-4 h-4"></i> Oficial PCA</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-rejected')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-rejected'?aC:iC}"><i data-lucide="x-octagon" class="w-4 h-4"></i> Indeferidos</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-segments')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-segments'?aC:iC}"><i data-lucide="layers" class="w-4 h-4"></i> Por Segmento</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-routings')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-routings'?aC:iC}"><i data-lucide="forward" class="w-4 h-4"></i> Redirecionadas</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-tracking')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-tracking'?aC:iC}"><i data-lucide="trending-up" class="w-4 h-4"></i> Status Execução</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-settings')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-settings'?aC:iC}"><i data-lucide="settings" class="w-4 h-4"></i> Admin</button>`;
+            
+            const isOpen = state.isWindowOpen;
+            toggleArea.innerHTML = `
+                <div class="flex items-center gap-2.5 bg-black/20 px-3 py-1.5 rounded-xl border ${isOpen ? 'border-green-400/30' : 'border-red-400/30'}">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-200"><i data-lucide="calendar-clock" class="w-3.5 h-3.5 inline mr-1"></i>Janela PCA</span>
+                    <button onclick="window.pcaApp.toggleWindow()" class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${isOpen ? 'bg-green-500' : 'bg-red-500'}" title="Clique para abrir ou fechar o recebimento de demandas">
+                        <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${isOpen ? 'translate-x-4' : 'translate-x-1'} shadow-sm"></span>
+                    </button>
+                    <span class="text-[10px] font-black ${isOpen ? 'text-green-300' : 'text-red-300'} w-12 text-center">${isOpen ? 'ABERTA' : 'FECHADA'}</span>
+                </div>
+            `;
+            toggleArea.classList.remove('hidden');
+
+          } else {
+            h += `<button onclick="window.pcaApp.navigate('form-demand')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='form-demand'?aC:iC}"><i data-lucide="file-plus" class="w-4 h-4"></i> Lançar Demanda</button>`;
+            h += `<button onclick="window.pcaApp.navigate('my-demands')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='my-demands'?aC:iC}"><i data-lucide="list" class="w-4 h-4"></i> Minhas Demandas</button>`;
+            
+            toggleArea.innerHTML = '';
+            toggleArea.classList.add('hidden');
+          }
+          nav.innerHTML = h; lucide.createIcons();
+        },
+        
+        updateHeaderProfile() {
+          const area = document.getElementById('userProfileArea'); if (!area || !state.currentUser) return;
+          const isA = state.currentUser.role === 'admin';
+          area.innerHTML = `
+            <div class="text-right hidden sm:block">
+              <div class="text-xs font-bold text-gray-800">${state.currentUser.name}</div>
+              <div class="text-[10px] text-gray-500">${isA?'Admin / Agente de Compras':'Servidor Solicitante'}</div>
+            </div>
+            <div class="w-10 h-10 rounded-2xl bg-autumn-secondary text-white flex items-center justify-center font-bold text-xs">${state.currentUser.name.charAt(0)}</div>
+            <button onclick="window.pcaApp.logout()" title="Sair do Sistema" class="p-2 text-gray-400 hover:text-autumn-accent rounded-xl hover:bg-gray-100 transition"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+          `;
+          lucide.createIcons();
+        },
+
+        populateSelects() {
+          state.sectors.sort((a,b) => a.localeCompare(b));
+          state.segments.sort((a,b) => a.localeCompare(b));
+            
+          const secSel = document.getElementById('demSector');
+          if(secSel) { secSel.innerHTML = '<option value="">Selecione...</option>' + state.sectors.map(s => `<option value="${s}">${s}</option>`).join(''); }
+          
+          const userSecSel = document.getElementById('newUserSector');
+          if(userSecSel) { userSecSel.innerHTML = state.sectors.map(s => `<option value="${s}">${s}</option>`).join(''); }
+
+          const years = ['PCA-2025','PCA-2026','PCA-2027','PCA-2028','PCA-2029','PCA-2030','PCA-2031','PCA-2032','PCA-2033','PCA-2034','PCA-2035'];
+          
+          const filters = ['filterMyYear', 'filterAdminInboxYear', 'filterAdminApprovedYear', 'filterRejYear', 'filterSegYear', 'filterDashYear', 'filterRoutYear'];
+          filters.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.innerHTML = '<option value="all">Todos os Anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+          });
+
+          const setYear = document.getElementById('settingActiveYear');
+          if(setYear) {
+              setYear.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+              setYear.value = state.activeYearPCA;
+          }
+
+          const demYear = document.getElementById('demYearPCA');
+          if(demYear) { demYear.value = state.activeYearPCA; }
+          
+          this.autoFillDemandForm();
+        },
+
+        populateAdminApprovedFilters() {
+          const el = document.getElementById('filterAdminApprovedSector');
+          if(el) el.innerHTML = '<option value="all">Todos os Setores</option>' + state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
+        },
+
+        populateAdminRejectedFilters() {
+          const elSec = document.getElementById('filterRejSector');
+          const elSeg = document.getElementById('filterRejSegment');
+          const elRoutSec = document.getElementById('filterRoutSector');
+          if(elSec) elSec.innerHTML = '<option value="all">Todos os Setores</option>' + state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
+          if(elSeg) elSeg.innerHTML = '<option value="all">Todos os Segmentos</option>' + state.segments.map(s => `<option value="${s}">${s}</option>`).join('');
+          if(elRoutSec) elRoutSec.innerHTML = '<option value="all">Todos os Setores</option>' + state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
+        },
+
+        populateTrackingSectors() {
+          const el = document.getElementById('filterTrackSector');
+          if(el) el.innerHTML = '<option value="all">Todos os Setores</option>' + state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
+        },
+        
+        populateSegmentFilters() {
+          const el = document.getElementById('filterSegGroup');
+          if(el) el.innerHTML = '<option value="all">Todos os Segmentos</option>' + state.segments.map(s => `<option value="${s}">${s}</option>`).join('');
+        },
+
+        handleSearch(q) {
+            const query = q.trim().toLowerCase();
+            if (!query) {
+                if (state.currentView === 'search-results') {
+                    this.navigate(state.currentUser.role === 'admin' ? 'admin-dashboard' : 'my-demands');
+                }
+                return;
+            }
+            
+            if (state.currentView !== 'search-results') {
+                this.navigate('search-results');
+            }
+            this.renderSearchResults(query);
+        },
+
+        clearSearch() {
+            const input = document.getElementById('globalSearchInput');
+            if(input) input.value = '';
+            this.navigate(state.currentUser.role === 'admin' ? 'admin-dashboard' : 'my-demands');
+        },
+
+        renderSearchResults(query) {
+            const c = document.getElementById('searchResultsContainer');
+            const sub = document.getElementById('searchResultSubtitle');
+            if(!c) return;
+
+            const terms = query.split(' ').filter(t => t.length > 0);
+
+            let results = state.demands.filter(d => {
+                if (state.currentUser.role !== 'admin' && d.userId !== state.currentUser.id && d.sector !== state.currentUser.sector) {
+                    return false;
+                }
+                const searchableText = `${d.id} ${d.codeSIPAC} ${d.title} ${d.desc} ${d.sector} ${d.user} ${d.statusPCA} ${d.executionStatus} ${d.yearPCA}`.toLowerCase();
+                return terms.every(term => searchableText.includes(term));
+            });
+
+            if(sub) sub.textContent = `${results.length} resultado(s) encontrado(s) para "${query}"`;
+
+            if (results.length === 0) {
+                c.innerHTML = '<div class="p-10 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>Nenhum resultado exato encontrado. Tente pesquisar por palavras parciais ou pelo código SIPAC.</div>';
+                lucide.createIcons();
+                return;
+            }
+
+            let h = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">';
+            results.forEach(d => {
+                let statusColor = d.statusPCA === 'Deferido' ? 'text-green-700 bg-green-100 border-green-200' : 
+                                 (d.statusPCA === 'Indeferido' ? 'text-red-700 bg-red-100 border-red-200' : 
+                                 (d.statusPCA === 'Outro Encaminhamento' ? 'text-blue-700 bg-blue-100 border-blue-200' : 'text-autumn-secondary bg-autumn-mustard/20 border-autumn-mustard/40'));
+                
+                let execBadge = getExecutionBadge(d.executionStatus);
+
+                h += `
+                <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm hover:border-autumn-secondary/60 hover:shadow-md transition flex flex-col justify-between gap-4 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-autumn-secondary/20"></div>
+                    <div class="pl-2">
+                        <div class="flex items-center gap-2 mb-3 flex-wrap">
+                            <span class="font-mono text-[10px] font-black px-2 py-0.5 rounded border bg-gray-100 text-gray-800">${d.id.replace('REQ-', '')}</span>
+                            <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-gray-200 bg-gray-50 uppercase">SIPAC: ${d.codeSIPAC}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${statusColor}">${d.statusPCA}</span>
+                        </div>
+                        <h4 class="text-sm font-black text-autumn-primary mb-1 line-clamp-2" title="${d.title}">${d.title}</h4>
+                        <p class="text-xs text-gray-500 line-clamp-2 mb-3 break-words">${d.desc}</p>
+                        
+                        <div class="flex flex-col gap-1.5 text-[11px] font-bold text-gray-600 bg-gray-50 p-2.5 rounded-xl border border-gray-100 mb-3">
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-autumn-secondary"></i> ${d.sector}</div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="user" class="w-3.5 h-3.5 text-autumn-secondary"></i> ${d.user}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-3 flex items-end justify-between gap-2 pl-2">
+                        <div>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Status de Execução</span>
+                            <span class="inline-flex items-center text-[10px] font-black px-2 py-0.5 rounded border uppercase ${execBadge}">${d.executionStatus}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">${d.qty} ${d.unit}</span>
+                            <span class="text-base font-black text-autumn-secondary">R$ ${fmtMoney(d.total)}</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="window.pcaApp.openViewDemandModal('${d.id}')" class="mt-2 w-full bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex justify-center items-center gap-1.5 ml-1">
+                        <i data-lucide="eye" class="w-4 h-4"></i> Visualizar Demanda
+                    </button>
+                </div>
+                `;
+            });
+            h += '</div>';
+            c.innerHTML = h;
+            lucide.createIcons();
+        },
+
+        chartSector: null,
+        chartSegment: null,
+
+        updateAdminDashboard() {
+            const filterY = document.getElementById('filterDashYear').value;
+            let listD = state.demands;
+            if(filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+            
+            const total = listD.reduce((acc, d) => acc + d.total, 0);
+            const count = listD.length;
+            const totalAprov = listD.filter(d => d.statusPCA === 'Deferido').reduce((acc, d) => acc + d.total, 0);
+            const countPend = listD.filter(d => d.statusPCA === 'Pendente').length;
+            const totalPend = listD.filter(d => d.statusPCA === 'Pendente').reduce((acc, d) => acc + d.total, 0);
+
+            document.getElementById('kpiDashTotal').textContent = `R$ ${fmtMoney(total)}`;
+            document.getElementById('kpiDashCount').textContent = `${count} demandas registradas`;
+            document.getElementById('kpiDashAprovado').textContent = `R$ ${fmtMoney(totalAprov)}`;
+            document.getElementById('kpiDashAprovadoPct').textContent = `${total > 0 ? ((totalAprov/total)*100).toFixed(1) : 0}% do total planejado`;
+            document.getElementById('kpiDashPendente').textContent = `R$ ${fmtMoney(totalPend)}`;
+            document.getElementById('kpiDashPendenteCount').textContent = `${countPend} demandas aguardando análise`;
+
+            const sectorMap = {};
+            listD.forEach(d => {
+                if(!sectorMap[d.sector]) sectorMap[d.sector] = 0;
+                sectorMap[d.sector] += d.total;
+            });
+            const sortedSectors = Object.keys(sectorMap).map(k => ({name: k, val: sectorMap[k]})).sort((a,b) => b.val - a.val);
+            
+            const segMap = {};
+            listD.filter(d => d.segment !== 'Pendente de Classificação').forEach(d => {
+                if(!segMap[d.segment]) segMap[d.segment] = { total: 0, sectors: {} };
+                segMap[d.segment].total += d.total;
+                if(!segMap[d.segment].sectors[d.sector]) segMap[d.segment].sectors[d.sector] = 0;
+                segMap[d.segment].sectors[d.sector] += d.total;
+            });
+            const sortedSegments = Object.keys(segMap).map(k => ({name: k, val: segMap[k].total, sectors: segMap[k].sectors})).sort((a,b) => b.val - a.val);
+
+            const ctxSec = document.getElementById('dashSectorChart');
+            if(this.chartSector) this.chartSector.destroy();
+            this.chartSector = new Chart(ctxSec, {
+                type: 'bar',
+                data: {
+                    labels: sortedSectors.map(s => s.name),
+                    datasets: [{
+                        label: 'Volume (R$)',
+                        data: sortedSectors.map(s => s.val),
+                        backgroundColor: '#1A4328', 
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: {display: false}, tooltip: {callbacks: {label: c => 'R$ '+fmtMoney(c.raw)}} }
+                }
+            });
+
+            const ctxSeg = document.getElementById('dashSegmentChart');
+            if(this.chartSegment) this.chartSegment.destroy();
+            this.chartSegment = new Chart(ctxSeg, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedSegments.map(s => s.name.length > 30 ? s.name.substring(0,30)+'...' : s.name),
+                    datasets: [{
+                        data: sortedSegments.map(s => s.val),
+                        backgroundColor: ['#D97726', '#1A4328', '#738637', '#D1A024', '#234476', '#C73E2C', '#6B7280']
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'right', labels: { boxWidth: 12, font: {size: 10} } },
+                        tooltip: { callbacks: { label: c => 'R$ '+fmtMoney(c.raw) } }
+                    }
+                }
+            });
+
+            let breakHtml = '';
+            sortedSegments.forEach(seg => {
+                const topSecs = Object.keys(seg.sectors).map(k => ({name: k, val: seg.sectors[k]})).sort((a,b) => b.val - a.val);
+                breakHtml += `
+                   <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+                      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Segmento</div>
+                      <h4 class="text-sm font-black text-autumn-primary leading-tight mb-2">${seg.name}</h4>
+                      <div class="text-lg font-black text-autumn-secondary mb-3">R$ ${fmtMoney(seg.val)}</div>
+                      <div class="space-y-1.5 border-t border-gray-200 pt-3">
+                         ${topSecs.map((s, i) => `
+                            <div class="flex justify-between items-center text-xs bg-white p-2 rounded-lg border border-gray-100">
+                               <span class="font-bold text-gray-700 truncate pr-2">${i+1}. ${s.name}</span>
+                               <span class="font-black text-gray-900 whitespace-nowrap">R$ ${fmtMoney(s.val)}</span>
+                            </div>
+                         `).join('')}
+                      </div>
+                   </div>
+                `;
+            });
+            document.getElementById('dashSegmentBreakdown').innerHTML = breakHtml || '<div class="col-span-full text-center text-gray-400 py-4 text-xs font-bold">Nenhum segmento classificado no período.</div>';
+        },
+
+        saveActiveYear() {
+            const newVal = document.getElementById('settingActiveYear').value;
+            state.activeYearPCA = newVal;
+            this.persistData();
+            
+            const demYear = document.getElementById('demYearPCA');
+            if(demYear) demYear.value = state.activeYearPCA;
+            
+            this.showToast(`Ano de planejamento restrito para ${newVal}`, 'success');
+        },
+
+        renderSettings() {
+          state.sectors.sort((a,b) => a.localeCompare(b));
+          state.segments.sort((a,b) => a.localeCompare(b));
+          
+          const secList = document.getElementById('sectorsList');
+          const segList = document.getElementById('segmentsList');
+          if(secList) secList.innerHTML = state.sectors.map((s, i) => `<li class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 font-medium text-gray-700"><span>${s}</span> <button type="button" onclick="window.pcaApp.removeSector(${i})" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></li>`).join('');
+          if(segList) segList.innerHTML = state.segments.map((s, i) => `<li class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 font-medium text-gray-700"><span>${s}</span> <button type="button" onclick="window.pcaApp.removeSegment(${i})" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></li>`).join('');
+          
+          const userSecSelect = document.getElementById('newUserSector');
+          if(userSecSelect) userSecSelect.innerHTML = state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
+
+          this.renderUsersList();
+          lucide.createIcons();
+        },
+
+        addSector(e) { e.preventDefault(); const val = document.getElementById('newSectorInput').value.trim(); if(val && !state.sectors.includes(val)) { state.sectors.push(val); this.persistData(); this.renderSettings(); document.getElementById('newSectorInput').value=''; if(window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('sectors', state.sectors); } },
+        removeSector(i) { if(confirm('Remover setor?')) { state.sectors.splice(i, 1); this.persistData(); this.renderSettings(); if(window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('sectors', state.sectors); } },
+        
+        addSegment(e) { e.preventDefault(); const val = document.getElementById('newSegmentInput').value.trim(); if(val && !state.segments.includes(val)) { state.segments.push(val); this.persistData(); this.renderSettings(); document.getElementById('newSegmentInput').value=''; if(window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('segments', state.segments); } },
+        removeSegment(i) { if(confirm('Remover segmento?')) { state.segments.splice(i, 1); this.persistData(); this.renderSettings(); if(window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('segments', state.segments); } },
+
+        generateRandomPassword() { 
+          document.getElementById('newUserPassword').value = 'uffs' + Math.floor(1000 + Math.random() * 9000); 
+        },
+
+        editUser(id) {
+          const u = state.users.find(x => x.id === id); if(!u) return;
+          document.getElementById('editUserId').value = u.id;
+          document.getElementById('newUserName').value = u.name;
+          document.getElementById('newUserCpf').value = u.cpf || '';
+          document.getElementById('newUserLogin').value = u.login;
+          
+          const secSelect = document.getElementById('newUserSector');
+          if(secSelect.querySelector(`option[value="${u.sector}"]`)) {
+             secSelect.value = u.sector;
+          } else {
+             secSelect.innerHTML = `<option value="${u.sector}">${u.sector}</option>` + secSelect.innerHTML;
+             secSelect.value = u.sector;
+          }
+          
+          document.getElementById('newUserRole').value = u.role || 'solicitante';
+          document.getElementById('newUserPassword').value = u.password;
+          document.getElementById('userFormTitle').innerHTML = '<i data-lucide="edit-3" class="w-5 h-5 text-autumn-mustard"></i> Editar Usuário';
+          document.getElementById('cancelUserEditBtn').classList.remove('hidden');
+          lucide.createIcons();
+        },
+
+        cancelEditUser() {
+          document.getElementById('editUserId').value = '';
+          document.getElementById('newUserForm').reset();
+          document.getElementById('userFormTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5 text-autumn-secondary"></i> Cadastrar Demandante';
+          document.getElementById('cancelUserEditBtn').classList.add('hidden');
+          lucide.createIcons();
+        },
+
+        handleCreateUser(e) {
+          e.preventDefault();
+          const eid = document.getElementById('editUserId').value;
+          const u = {
+            id: eid || ('usr_' + Date.now()),
+            name: document.getElementById('newUserName').value.trim(),
+            cpf: document.getElementById('newUserCpf').value.trim(),
+            login: document.getElementById('newUserLogin').value.trim(),
+            sector: document.getElementById('newUserSector').value,
+            role: document.getElementById('newUserRole').value,
+            password: document.getElementById('newUserPassword').value.trim()
+          };
+          
+          if(!eid && state.users.find(x => x.login === u.login)) {
+            return this.showToast('Este SIAPE já está cadastrado.', 'alert');
+          }
+          
+          if(eid) {
+              const idx = state.users.findIndex(x => x.id === eid);
+              if(idx >= 0) state.users[idx] = u;
+          } else {
+              state.users.push(u);
+          }
+          
+          this.persistData();
+          if(window.cloudSyncInstance) window.cloudSyncInstance.saveUser(u);
+          this.cancelEditUser();
+          this.renderUsersList();
+          this.showToast('Usuário salvo com sucesso!', 'success');
+        },
+
+        deleteUser(id) {
+          if(confirm('Tem certeza que deseja remover o acesso deste demandante?')) {
+            state.users = state.users.filter(u => u.id !== id);
+            this.persistData();
+            if(window.cloudSyncInstance) window.cloudSyncInstance.deleteUser(id);
+            this.renderUsersList();
+            this.showToast('Acesso removido.', 'success');
+          }
+        },
+
+        renderUsersList() {
+          const c = document.getElementById('usersListContainer');
+          const badge = document.getElementById('userCountBadge');
+          if(!c) return;
+          const nonAdminUsers = state.users.filter(u => u.role !== 'admin');
+          badge.textContent = `${nonAdminUsers.length} cadastrados`;
+          
+          if(nonAdminUsers.length === 0) {
+            c.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-500 font-bold">Nenhum demandante cadastrado.</td></tr>';
+            return;
+          }
+
+          c.innerHTML = nonAdminUsers.map(u => `
+            <tr class="bg-white hover:bg-gray-50 transition border-b border-gray-100 last:border-0">
+              <td class="p-3">
+                <div class="font-bold text-gray-800">${u.name}</div>
+                <div class="font-mono text-[10px] font-black text-autumn-secondary mt-0.5">${u.login} <span class="text-gray-300 mx-1">|</span> <span class="text-gray-400">${u.cpf || 'Sem CPF'}</span></div>
+              </td>
+              <td class="p-3"><span class="bg-gray-100 border border-gray-200 text-gray-700 px-2 py-1 rounded-lg font-bold text-[10px]">${u.sector}</span></td>
+              <td class="p-3"><span class="px-2 py-1 rounded-lg font-bold text-[10px] uppercase ${u.role === 'admin' ? 'bg-autumn-mustard/20 text-autumn-secondary' : 'bg-blue-50 text-blue-600'}">${u.role}</span></td>
+              <td class="p-3 text-center flex justify-center gap-1">
+                <button type="button" onclick="window.pcaApp.editUser('${u.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-xl transition shadow-sm border border-blue-100" title="Editar"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                ${u.login === 'admin' ? '' : `<button type="button" onclick="window.pcaApp.deleteUser('${u.id}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-xl transition shadow-sm border border-red-100" title="Remover Acesso"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`}
+              </td>
+            </tr>
+          `).join('');
+          lucide.createIcons();
+        },
+
+        calculateTotal() {
+          const qty = parseInt(document.getElementById('demQty').value) || 0;
+          const price = this.parseMoney(document.getElementById('demPrice').value) || 0;
+          document.getElementById('demTotalDisplay').textContent = `R$ ${fmtMoney(qty * price)}`;
+        },
+
+        submitDemand(e) {
+          e.preventDefault();
+          
+          if (!state.isWindowOpen) {
+              return this.showToast('A janela de cadastros está fechada.', 'alert');
+          }
+          
+          const desc = document.getElementById('demDesc').value;
+          if(!/[a-zA-Z]/.test(desc)) return this.showToast('A justificativa/descrição deve conter textos explícitos.', 'alert');
+          
+          const cpfRaw = document.getElementById('demCpf').value;
+          if(!this.isValidCPF(cpfRaw)) return this.showToast('CPF Inválido. Verifique os números digitados.', 'alert');
+
+          const qtyStr = document.getElementById('demQty').value;
+          const priceStr = document.getElementById('demPrice').value;
+          
+          if(parseInt(qtyStr) <= 0 || this.parseMoney(priceStr) <= 0) return this.showToast('Quantidade e Valor devem ser maiores que zero.', 'alert');
+
+          let linkVal = document.getElementById('demLink').value || '';
+          if(linkVal && !linkVal.startsWith('http')) { linkVal = 'https://' + linkVal; }
+
+          const d = {
+            id: `REQ-${Date.now().toString().slice(-6)}`,
+            dateStamp: new Date().toISOString(),
+            userId: state.currentUser.id,
+            
+            yearPCA: document.getElementById('demYearPCA').value,
+            sector: document.getElementById('demSector').value,
+            user: document.getElementById('demUser').value,
+            cpf: cpfRaw,
+            
+            segment: 'Pendente de Classificação',
+            codeSIPAC: document.getElementById('demCode').value || '0',
+            unit: document.getElementById('demUnit').value,
+            title: document.getElementById('demTitle').value,
+            desc: desc,
+            qty: parseInt(qtyStr),
+            price: this.parseMoney(priceStr),
+            total: parseInt(qtyStr) * this.parseMoney(priceStr),
+            link: linkVal || '-',
+            
+            priority: document.getElementById('demPriority').value,
+            dateNeed: document.getElementById('demDate').value,
+            prioJust: document.getElementById('demPrioJust').value || '-',
+            needJust: document.getElementById('demNeedJust').value,
+
+            classEstoque: 'Não Avaliado',
+            classAVN: 'Não Avaliado',
+            classAta: 'Não Avaliado',
+            classTI: 'Não Avaliado',
+            statusPCA: 'Pendente',
+            dfd: '',
+            
+            pcaFeedback: '', // Justificativa de Indeferimento
+            routingDetail: '', // Detalhe de Outros Encaminhamentos
+
+            executionStatus: 'PLANEJADA',
+            executionReason: ''
+          };
+
+          state.demands.unshift(d);
+          this.persistData();
+          if(window.cloudSyncInstance) window.cloudSyncInstance.saveDemand(d);
+          document.getElementById('pcaDemandForm').reset();
+          document.getElementById('demYearPCA').value = state.activeYearPCA;
+          document.getElementById('demTotalDisplay').textContent = 'R$ 0,00';
+          this.togglePriorityJust();
+          this.autoFillDemandForm();
+          this.showToast('Demanda submetida com sucesso!', 'success');
+          this.navigate('my-demands');
+        },
+
+        renderMyDemands() {
+          const c = document.getElementById('myDemandsContainer');
+          const filterY = document.getElementById('filterMyYear').value;
+          
+          let myD = state.demands.filter(d => d.userId === state.currentUser.id);
+          if (filterY !== 'all') { myD = myD.filter(d => d.yearPCA === filterY); }
+          
+          if(myD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda lançada para este período.</div>'; return; }
+          
+          let h = '';
+          myD.forEach(d => {
+            let sBadge = d.statusPCA === 'Deferido' ? 'bg-green-100 text-green-800 border-green-200' : 
+                         (d.statusPCA === 'Indeferido' ? 'bg-red-100 text-red-800 border-red-200' : 
+                         (d.statusPCA === 'Outro Encaminhamento' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-autumn-mustard/20 text-autumn-secondary border-autumn-mustard/40'));
+            
+            let yearBadge = getYearBadgeClass(d.yearPCA);
+            let execBadge = getExecutionBadge(d.executionStatus);
+
+            h += `
+              <div class="border border-gray-200 rounded-2xl p-4 sm:p-5 hover:border-autumn-secondary/50 transition bg-white shadow-sm flex flex-col gap-3">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                      <span class="font-mono text-xs font-black px-2 py-0.5 rounded border ${yearBadge}">${d.yearPCA}</span>
+                      <span class="font-mono text-[11px] font-black text-autumn-primary bg-gray-100 px-2 py-0.5 rounded border border-gray-200">${d.id.replace('REQ-', '')}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${sBadge}">Classificação: ${d.statusPCA}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-900 line-clamp-1">${d.title}</h4>
+                  </div>
+                  <div class="text-right flex-shrink-0">
+                    <div class="text-[10px] text-gray-500 font-bold uppercase">Estimado</div>
+                    <div class="text-sm font-black text-autumn-secondary">R$ ${fmtMoney(d.total)}</div>
+                  </div>
+                </div>
+                
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                   <div>
+                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Status da Execução</span>
+                     <span class="inline-flex items-center text-xs font-black px-2.5 py-1 rounded border mt-0.5 uppercase ${execBadge}">${d.executionStatus}</span>
+                     ${d.executionStatus === 'NÃO SERÁ EXECUTADA' && d.executionReason ? `<div class="text-[11px] text-red-600 font-bold mt-1 ml-1"><i data-lucide="corner-down-right" class="w-3 h-3 inline mr-1"></i>Motivo: ${d.executionReason}</div>` : ''}
+                   </div>
+                   <div class="text-right">
+                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">SIPAC</span>
+                      <span class="font-mono text-xs font-bold text-gray-800">${d.codeSIPAC}</span>
+                   </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-[11px] text-gray-600">
+                  <div><span class="block text-gray-400 font-bold uppercase">Quantidade</span> <span class="font-bold text-gray-800">${d.qty} ${d.unit}</span></div>
+                  <div><span class="block text-gray-400 font-bold uppercase">Prioridade</span> <span class="font-bold text-gray-800">${d.priority}</span></div>
+                  <div><span class="block text-gray-400 font-bold uppercase">Data Desejada</span> <span class="font-bold text-gray-800">${parseDateOnly(d.dateNeed)}</span></div>
+                  <div><span class="block text-gray-400 font-bold uppercase">DFD Nº</span> <span class="font-bold text-autumn-primary">${d.dfd || 'N/A'}</span></div>
+                </div>
+                
+                ${d.statusPCA === 'Indeferido' && d.pcaFeedback ? `<div class="bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-800 mt-2 shadow-sm"><strong class="flex items-center gap-1.5 mb-0.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Motivo do Indeferimento:</strong> ${d.pcaFeedback}</div>` : ''}
+                ${d.statusPCA === 'Outro Encaminhamento' && d.routingDetail ? `<div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-800 mt-2 shadow-sm"><strong class="flex items-center gap-1.5 mb-0.5"><i data-lucide="forward" class="w-4 h-4"></i> Redirecionamento da Demanda:</strong> ${d.routingDetail}</div>` : ''}
+              </div>
+            `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+
+        // ============================================
+        // RENDERIZAÇÕES DO PAINEL ADMIN
+        // ============================================
+
+        renderAdminInbox() {
+          const c = document.getElementById('adminInboxContainer');
+          const filterY = document.getElementById('filterAdminInboxYear').value;
+          
+          let listD = state.demands.filter(d => d.statusPCA === 'Pendente' && d.codeSIPAC !== '0');
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Caixa de entrada limpa. Nenhuma demanda pendente!</div>'; return; }
+          
+          let h = '';
+          listD.forEach(d => {
+             let yearBadge = getYearBadgeClass(d.yearPCA);
+
+             h += `
+              <div class="border border-gray-300 rounded-2xl p-5 bg-white shadow-sm flex flex-col gap-4 hover:border-gray-400 transition-colors">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                      <span class="font-mono text-xs font-black px-2 py-0.5 rounded border ${yearBadge}">${d.yearPCA}</span>
+                      <span class="font-mono text-[11px] font-black text-autumn-primary bg-gray-100 px-2 py-0.5 rounded border border-gray-200">${d.id.replace('REQ-', '')}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-autumn-mustard/20 text-autumn-secondary border-autumn-mustard/40">AGUARDANDO CLASSIFICAÇÃO</span>
+                      <span class="text-[10px] font-medium text-gray-400 ml-2"><i data-lucide="clock" class="w-3 h-3 inline"></i> ${parseDate(d.dateStamp)}</span>
+                    </div>
+                    <h4 class="text-sm font-black text-gray-900 uppercase">${d.sector} <span class="text-gray-400 font-normal mx-1">•</span> <span class="capitalize font-bold text-gray-700">${d.user}</span></h4>
+                  </div>
+                  <div class="text-right flex items-center gap-2">
+                    <button onclick="window.pcaApp.openViewDemandModal('${d.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5" title="Ver Informações Completas">
+                      <i data-lucide="eye" class="w-3.5 h-3.5"></i> Ver Mais Detalhes
+                    </button>
+                    <button onclick="window.pcaApp.openClassifyModal('${d.id}')" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                      <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Classificar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="bg-autumn-bg p-3 rounded-xl border border-gray-200 flex flex-col md:flex-row justify-between gap-4">
+                  <div class="flex-1">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Objeto</span>
+                    <div class="text-sm font-bold text-autumn-primary">${d.title}</div>
+                    <div class="text-[11px] text-gray-600 mt-1 break-words whitespace-pre-wrap line-clamp-3">${d.desc}</div>
+                  </div>
+                  <div class="md:w-32 md:text-right border-t md:border-t-0 md:border-l border-gray-300 pt-3 md:pt-0 md:pl-4">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-0.5">Total Estimado</span>
+                    <div class="text-[11px] font-bold text-gray-700">${d.qty} ${d.unit}</div>
+                    <div class="text-base font-black text-autumn-secondary mt-0.5">R$ ${fmtMoney(d.total)}</div>
+                  </div>
+                </div>
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        renderAdminCatalog() {
+          const c = document.getElementById('adminCatalogContainer');
+          
+          // TRAVA: Apenas itens que o SIPAC é "0" ficam retidos aqui.
+          let listD = state.demands.filter(d => d.codeSIPAC === '0');
+          listD.sort((a,b) => new Date(a.dateStamp) - new Date(b.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="col-span-1 md:col-span-2 p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda pendente de catalogação. Ótimo trabalho!</div>'; return; }
+          
+          let h = '';
+          listD.forEach(d => {
+             const hasLink = d.link && d.link !== '-' && d.link.startsWith('http');
+             
+             h += `
+              <div class="border border-blue-200 rounded-2xl p-4 bg-blue-50/30 flex flex-col justify-between shadow-sm">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="font-mono text-[10px] font-black text-blue-700 bg-blue-100 px-2 py-0.5 rounded border border-blue-200">${d.id.replace('REQ-', '')}</span>
+                      <span class="text-[10px] font-bold text-gray-600 uppercase">${d.sector}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-900 mb-1">${d.title}</h4>
+                    <p class="text-[11px] text-gray-600 mb-2 break-words whitespace-pre-wrap line-clamp-3">${d.desc}</p>
+                    
+                    ${hasLink ? `<a href="${d.link}" target="_blank" class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:text-blue-800 hover:underline mb-4"><i data-lucide="external-link" class="w-3 h-3"></i> Acessar Link de Referência</a>` : '<div class="text-[10px] text-gray-400 italic mb-4">Nenhum link de referência fornecido.</div>'}
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-blue-200 shadow-sm flex items-center gap-2 mt-auto">
+                   <input type="text" id="catSipac_${d.id}" placeholder="Digitar código SIPAC..." class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none text-xs font-mono font-bold">
+                   <button onclick="window.pcaApp.saveCatalog('${d.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm flex-shrink-0">
+                     Salvar Código
+                   </button>
+                </div>
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        saveCatalog(id) {
+            const input = document.getElementById(`catSipac_${id}`);
+            const newCode = input.value.trim();
+            if(!newCode || newCode === '0') return this.showToast('Digite um código válido diferente de zero.', 'alert');
+            
+            const d = state.demands.find(x => x.id === id);
+            if(d) {
+                d.codeSIPAC = newCode;
+                this.persistData();
+                if(window.cloudSyncInstance) window.cloudSyncInstance.saveDemand(d);
+                this.renderAdminCatalog();
+                this.showToast('Catálogo atualizado! Demanda liberada para tramitação.', 'success');
+            }
+        },
+
+        renderAdminApproved() {
+          const c = document.getElementById('adminApprovedContainer');
+          const filterY = document.getElementById('filterAdminApprovedYear').value;
+          const filterS = document.getElementById('filterAdminApprovedSector').value;
+          
+          let listD = state.demands.filter(d => d.statusPCA === 'Deferido' && d.codeSIPAC !== '0');
+          
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          if (filterS !== 'all') { listD = listD.filter(d => d.sector === filterS); }
+          
+          listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda aprovada encontrada com os filtros selecionados.</div>'; return; }
+          
+          let h = '';
+          listD.forEach(d => {
+             h += `
+              <div class="border border-green-300 rounded-2xl p-5 bg-white shadow-sm flex flex-col gap-4 border-l-4 border-l-green-600">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                      <span class="font-mono text-xs font-black px-2 py-0.5 rounded border border-gray-300 bg-gray-100">${d.yearPCA}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-green-100 text-green-800 border border-green-200">DEFERIDO PCA</span>
+                      ${d.dfd ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">DFD: ${d.dfd}</span>` : ''}
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200">SIPAC: ${d.codeSIPAC}</span>
+                    </div>
+                    <h4 class="text-sm font-black text-gray-900 uppercase">${d.sector} <span class="text-gray-400 font-normal mx-1">•</span> <span class="capitalize text-gray-700">${d.user}</span> <span class="text-[10px] text-gray-400 ml-1">CPF: ${d.cpf}</span></h4>
+                  </div>
+                  <div class="text-right">
+                     <span class="text-[10px] font-bold text-gray-500 uppercase block mb-0.5">Total Estimado</span>
+                     <div class="text-base font-black text-autumn-secondary">R$ ${fmtMoney(d.total)}</div>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Item</span>
+                    <div class="text-sm font-bold text-autumn-primary">${d.title}</div>
+                    <div class="text-[11px] text-gray-700 mt-1 break-words whitespace-pre-wrap line-clamp-3">${d.desc}</div>
+                  </div>
+                  <div>
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Justificativa da Contratação</span>
+                    <div class="text-[11px] text-gray-700 break-words whitespace-pre-wrap line-clamp-3">${d.needJust}</div>
+                    
+                    <div class="mt-3 grid grid-cols-2 gap-2 text-[10px]">
+                      <div><strong class="text-gray-400 uppercase">Qtd:</strong> <span class="font-bold text-gray-900">${d.qty} ${d.unit}</span></div>
+                      <div><strong class="text-gray-400 uppercase">Data Max:</strong> <span class="font-bold text-gray-900">${parseDateOnly(d.dateNeed)}</span></div>
+                      <div><strong class="text-gray-400 uppercase">Prioridade:</strong> <span class="font-bold text-gray-900">${d.priority}</span></div>
+                      <div class="truncate"><strong class="text-gray-400 uppercase">Link:</strong> <a href="${d.link}" target="_blank" class="text-blue-600 font-bold hover:underline">Ver ref.</a></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        renderAdminRejected() {
+          const c = document.getElementById('adminRejectedContainer');
+          const filterY = document.getElementById('filterRejYear').value;
+          const filterS = document.getElementById('filterRejSector').value;
+          const filterSeg = document.getElementById('filterRejSegment').value;
+          
+          let listD = state.demands.filter(d => (d.statusPCA === 'Indeferido' || d.statusPCA === 'Não Cadastrar') && d.codeSIPAC !== '0');
+          
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          if (filterS !== 'all') { listD = listD.filter(d => d.sector === filterS); }
+          if (filterSeg !== 'all') { listD = listD.filter(d => d.segment === filterSeg); }
+          
+          listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda indeferida com os filtros selecionados.</div>'; return; }
+          
+          let h = '';
+          listD.forEach(d => {
+             h += `
+              <div class="border border-red-300 rounded-2xl p-5 bg-white shadow-sm flex flex-col gap-4 border-l-4 border-l-red-600">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                      <span class="font-mono text-xs font-black px-2 py-0.5 rounded border border-gray-300 bg-gray-100">${d.yearPCA}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-800 border border-red-200 uppercase">${d.statusPCA}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200">SIPAC: ${d.codeSIPAC}</span>
+                    </div>
+                    <h4 class="text-sm font-black text-gray-900 uppercase">${d.sector} <span class="text-gray-400 font-normal mx-1">•</span> <span class="capitalize text-gray-700">${d.user}</span></h4>
+                  </div>
+                  <div class="text-right flex flex-col justify-center">
+                     <span class="text-[10px] font-bold text-gray-500 uppercase block mb-0.5">Segmento Associado</span>
+                     <div class="text-[11px] font-black text-gray-700">${d.segment}</div>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Item</span>
+                  <div class="text-sm font-bold text-autumn-primary">${d.title}</div>
+                  <div class="text-[11px] text-gray-700 mt-1 break-words whitespace-pre-wrap line-clamp-3">${d.desc}</div>
+                </div>
+                
+                ${d.pcaFeedback ? `<div class="bg-red-50 border border-red-200 p-3 rounded-xl text-xs text-red-800 mt-2 shadow-sm"><strong class="flex items-center gap-1.5 mb-0.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Motivo do Indeferimento:</strong> ${d.pcaFeedback}</div>` : ''}
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        renderAdminRoutings() {
+          const c = document.getElementById('adminRoutingsContainer');
+          const filterY = document.getElementById('filterRoutYear').value;
+          const filterS = document.getElementById('filterRoutSector').value;
+          const filterT = document.getElementById('filterRoutType').value;
+          
+          let listD = state.demands.filter(d => d.statusPCA === 'Outro Encaminhamento' && d.codeSIPAC !== '0');
+          
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          if (filterS !== 'all') { listD = listD.filter(d => d.sector === filterS); }
+          if (filterT !== 'all') { listD = listD.filter(d => d.routingDetail === filterT); }
+          
+          listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda encaminhada encontrada com os filtros selecionados.</div>'; return; }
+          
+          let h = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+          listD.forEach(d => {
+             h += `
+              <div class="print-break-inside-avoid border border-blue-300 rounded-2xl p-5 bg-white shadow-sm flex flex-col gap-4 border-l-4 border-l-blue-600">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                      <span class="font-mono text-xs font-black px-2 py-0.5 rounded border border-gray-300 bg-gray-100">${d.yearPCA}</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200">REDIRECIONADO</span>
+                      <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-800 border border-purple-200">SIPAC: ${d.codeSIPAC}</span>
+                    </div>
+                    <h4 class="text-sm font-black text-gray-900 uppercase">${d.sector} <span class="text-gray-400 font-normal mx-1">•</span> <span class="capitalize text-gray-700">${d.user}</span></h4>
+                  </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Item Solicitado</span>
+                  <div class="text-sm font-bold text-autumn-primary">${d.title}</div>
+                  <div class="mt-2 grid grid-cols-2 gap-2 text-[10px]">
+                      <div><strong class="text-gray-400 uppercase">Quantidade:</strong> <span class="font-bold text-gray-900">${d.qty} ${d.unit}</span></div>
+                      <div><strong class="text-gray-400 uppercase">Valor Estimado:</strong> <span class="font-bold text-autumn-secondary">R$ ${fmtMoney(d.total)}</span></div>
+                  </div>
+                </div>
+                
+                ${d.routingDetail ? `<div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs text-blue-800 shadow-sm font-bold"><i data-lucide="forward" class="w-4 h-4 inline mr-1"></i> Destino: ${d.routingDetail}</div>` : ''}
+              </div>
+             `;
+          });
+          h += '</div>';
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        printRoutingReport() {
+            setTimeout(() => {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR');
+                const ts = document.getElementById('pdf-timestamp-routing');
+                if(ts) ts.innerText = `Documento gerado em: ${dateStr}`;
+                window.print();
+            }, 100);
+        },
+
+        renderAdminSegments() {
+          const c = document.getElementById('adminSegmentsContainer');
+          const filterY = document.getElementById('filterSegYear').value;
+          const filterGrp = document.getElementById('filterSegGroup').value;
+          
+          let listD = state.demands.filter(d => d.segment !== 'Pendente de Classificação' && d.codeSIPAC !== '0');
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          
+          const grouped = {};
+          
+          // 1. Primeiro, agrupamos TODAS as demandas por SIPAC (sem aplicar o filtro de segmento ainda)
+          listD.forEach(d => {
+             const key = d.codeSIPAC;
+             if (!grouped[key]) {
+                 grouped[key] = {
+                     sipac: d.codeSIPAC,
+                     title: d.title,
+                     segment: d.segment, // Assume o segmento da primeira demanda encontrada
+                     unit: d.unit,
+                     totalQty: 0,
+                     totalValue: 0,
+                     sectors: []
+                 };
+             }
+             grouped[key].totalQty += d.qty;
+             grouped[key].totalValue += d.total;
+             grouped[key].sectors.push({
+                 name: d.sector,
+                 qty: d.qty,
+                 total: d.total,
+                 id: d.id
+             });
+          });
+
+          // 2. AGORA aplicamos o filtro de Segmento olhando apenas para o Card Pai (o Agrupamento)
+          let finalGroups = Object.values(grouped);
+          if (filterGrp !== 'all') { 
+              finalGroups = finalGroups.filter(g => g.segment === filterGrp); 
+          }
+          
+          if(finalGroups.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda classificada encontrada para este filtro.</div>'; return; }
+          
+          const sortedGroups = finalGroups.sort((a, b) => b.totalValue - a.totalValue);
+
+          let h = '';
+          sortedGroups.forEach(group => {
+             h += `
+              <div class="border border-purple-200 rounded-3xl p-5 sm:p-6 bg-white shadow-sm flex flex-col gap-4 hover:shadow-md transition">
+                <div class="flex flex-col md:flex-row justify-between gap-4 border-b border-gray-100 pb-5">
+                  <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] font-bold text-gray-600 uppercase border border-gray-200 bg-gray-50 px-2 py-0.5 rounded">SIPAC: ${group.sipac}</span>
+                        <span class="text-[10px] font-black text-autumn-secondary uppercase tracking-wider">${group.segment}</span>
+                      </div>
+                      <h4 class="text-base font-black text-gray-900 line-clamp-2 leading-tight">${group.title}</h4>
+                  </div>
+                  <div class="md:text-right flex flex-col justify-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Consolidado (Todas as Demandas)</span>
+                      <div class="text-xs font-bold text-gray-700">${group.totalQty} ${group.unit}</div>
+                      <div class="text-xl font-black text-autumn-secondary mt-0.5">R$ ${fmtMoney(group.totalValue)}</div>
+                  </div>
+                </div>
+                
+                <div class="bg-purple-50/50 rounded-2xl p-4 border border-purple-100/60 shadow-inner">
+                  <span class="text-[10px] font-bold text-purple-800 uppercase tracking-wider block mb-3 flex items-center gap-1.5"><i data-lucide="git-merge" class="w-3.5 h-3.5"></i> Detalhamento por Setor Demandante</span>
+                  <div class="grid grid-cols-1 gap-2.5">
+                     ${group.sectors.sort((a,b) => b.total - a.total).map(s => `
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center bg-white p-3 rounded-xl border border-purple-200 shadow-sm gap-2">
+                           <div class="flex items-center gap-3">
+                              <span class="font-mono text-[9px] font-black text-purple-600 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">${s.id.replace('REQ-', '')}</span>
+                              <span class="text-xs font-bold text-gray-800 uppercase tracking-wide">${s.name}</span>
+                           </div>
+                           <div class="flex items-center justify-between sm:justify-end gap-5 text-xs w-full sm:w-auto border-t sm:border-t-0 border-gray-100 pt-2 sm:pt-0 mt-1 sm:mt-0">
+                              <span class="font-bold text-gray-600 bg-gray-50 px-2 py-1 rounded">${s.qty} ${group.unit}</span>
+                              <span class="font-black text-autumn-primary w-24 text-right text-sm">R$ ${fmtMoney(s.total)}</span>
+                           </div>
+                        </div>
+                     `).join('')}
+                  </div>
+                </div>
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        renderAdminTracking() {
+          const c = document.getElementById('adminTrackingContainer');
+          const filterS = document.getElementById('filterTrackSector').value;
+          
+          let listD = state.demands.filter(d => d.codeSIPAC !== '0');
+          if (filterS !== 'all') { listD = listD.filter(d => d.sector === filterS); }
+          listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
+
+          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda para este setor.</div>'; return; }
+          
+          let h = '';
+          listD.forEach(d => {
+             let execBadge = getExecutionBadge(d.executionStatus);
+             
+             const predefinedReasons = ['Tem no AVN', 'Não há recursos disponíveis', 'Será tratado futuramente'];
+             const isCustom = d.executionReason && !predefinedReasons.includes(d.executionReason);
+             const selectVal = isCustom ? 'Outro' : (d.executionReason || 'Tem no AVN');
+             
+             const showReason = d.executionStatus === 'NÃO SERÁ EXECUTADA' ? '' : 'hidden';
+             const showCustomBox = (d.executionStatus === 'NÃO SERÁ EXECUTADA' && isCustom) ? '' : 'hidden';
+
+             h += `
+              <div class="border border-gray-300 rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-mono text-[10px] font-black text-autumn-primary bg-gray-100 px-2 py-0.5 rounded border border-gray-200">${d.id.replace('REQ-', '')}</span>
+                      <span class="text-[10px] font-bold text-gray-600 uppercase">${d.sector}</span>
+                      <span class="inline-flex items-center text-[10px] font-black px-2 py-0.5 rounded border uppercase ${execBadge}" id="badgeExec_${d.id}">${d.executionStatus}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-900 line-clamp-1">${d.title}</h4>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 flex flex-col gap-2 w-full md:w-auto md:min-w-[320px]">
+                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Atualizar Status</span>
+                   <div class="flex flex-col gap-2">
+                       <select onchange="window.pcaApp.toggleExecReason(this, '${d.id}')" id="execStatus_${d.id}" class="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-bold text-gray-700 cursor-pointer">
+                           <option value="PLANEJADA" ${d.executionStatus==='PLANEJADA'?'selected':''}>PLANEJADA</option>
+                           <option value="EM EXECUÇÃO" ${d.executionStatus==='EM EXECUÇÃO'?'selected':''}>EM EXECUÇÃO</option>
+                           <option value="DISPONÍVEL PARA EMPENHO" ${(d.executionStatus==='DISPONÍVEL PARA EMPENHO' || d.executionStatus==='EXECUTADA')?'selected':''}>DISPONÍVEL PARA EMPENHO</option>
+                           <option value="NÃO SERÁ EXECUTADA" ${d.executionStatus==='NÃO SERÁ EXECUTADA'?'selected':''}>NÃO SERÁ EXECUTADA</option>
+                       </select>
+                       
+                       <select id="execReason_${d.id}" onchange="window.pcaApp.toggleCustomReason(this, '${d.id}')" class="${showReason} w-full px-3 py-2 rounded-lg border border-red-300 bg-red-50 text-red-800 focus:ring-2 focus:ring-red-400 outline-none text-xs font-bold cursor-pointer">
+                           <option value="Tem no AVN" ${selectVal==='Tem no AVN'?'selected':''}>Tem no AVN</option>
+                           <option value="Não há recursos disponíveis" ${selectVal==='Não há recursos disponíveis'?'selected':''}>Não há recursos disponíveis</option>
+                           <option value="Será tratado futuramente" ${selectVal==='Será tratado futuramente'?'selected':''}>Será tratado futuramente</option>
+                           <option value="Outro" ${selectVal==='Outro'?'selected':''}>Outro motivo (Especificar...)</option>
+                       </select>
+                       
+                       <input type="text" id="execCustomReason_${d.id}" value="${isCustom ? d.executionReason : ''}" placeholder="Qual o motivo? (Ex: Processo revogado...)" class="${showCustomBox} w-full px-3 py-2 rounded-lg border border-red-300 bg-white text-red-800 focus:ring-2 focus:ring-red-400 outline-none text-xs font-medium shadow-inner">
+                       
+                       <button onclick="window.pcaApp.saveTracking('${d.id}')" class="bg-gray-800 hover:bg-black text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm w-full flex justify-center items-center gap-1.5 mt-1">
+                          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Atualizar Status
+                       </button>
+                   </div>
+                </div>
+              </div>
+             `;
+          });
+          c.innerHTML = h; lucide.createIcons();
+        },
+
+        toggleExecReason(selectEl, id) {
+            const reasonBox = document.getElementById(`execReason_${id}`);
+            const customBox = document.getElementById(`execCustomReason_${id}`);
+            if(selectEl.value === 'NÃO SERÁ EXECUTADA') {
+                reasonBox.classList.remove('hidden');
+                if (reasonBox.value === 'Outro') customBox.classList.remove('hidden');
+            } else {
+                reasonBox.classList.add('hidden');
+                customBox.classList.add('hidden');
+            }
+        },
+
+        toggleCustomReason(selectEl, id) {
+            const customBox = document.getElementById(`execCustomReason_${id}`);
+            if (selectEl.value === 'Outro') {
+                customBox.classList.remove('hidden');
+                customBox.focus();
+            } else {
+                customBox.classList.add('hidden');
+            }
+        },
+
+        saveTracking(id) {
+            const stat = document.getElementById(`execStatus_${id}`).value;
+            const reasonSelect = document.getElementById(`execReason_${id}`).value;
+            const customReason = document.getElementById(`execCustomReason_${id}`).value.trim();
+            
+            let finalReason = '';
+            if (stat === 'NÃO SERÁ EXECUTADA') {
+                if (reasonSelect === 'Outro') {
+                    if (!customReason) return this.showToast('Por favor, especifique o motivo.', 'alert');
+                    finalReason = customReason;
+                } else {
+                    finalReason = reasonSelect;
+                }
+            }
+            
+            const d = state.demands.find(x => x.id === id);
+            if(d) {
+                d.executionStatus = stat;
+                d.executionReason = finalReason;
+                this.persistData();
+                if(window.cloudSyncInstance) window.cloudSyncInstance.saveDemand(d);
+                this.showToast('Status atualizado com sucesso!', 'success');
+                this.renderAdminTracking(); 
+            }
+        },
+
+        // ============================================
+        // MODAL DE CLASSIFICAÇÃO
+        // ============================================
+        
+        openClassifyModal(id) {
+          const d = state.demands.find(x => x.id === id); if(!d) return;
+          document.getElementById('classDemandId').value = d.id;
+          document.getElementById('classItemYear').textContent = d.yearPCA;
+          document.getElementById('classItemName').textContent = d.title;
+          document.getElementById('classItemSector').textContent = d.sector;
+          
+          const segSel = document.getElementById('classSegment');
+          segSel.innerHTML = '<option value="">Selecione...</option>' + state.segments.map(s => `<option value="${s}">${s}</option>`).join('');
+          
+          if (d.segment !== 'Pendente de Classificação' && !state.segments.includes(d.segment)) {
+              segSel.innerHTML = `<option value="${d.segment}">${d.segment}</option>` + segSel.innerHTML;
+          }
+          segSel.value = d.segment === 'Pendente de Classificação' ? '' : d.segment;
+          
+          this.setClassBtn('classEstoque', d.classEstoque);
+          this.setClassBtn('classAVN', d.classAVN);
+          this.setClassBtn('classAta', d.classAta);
+          this.setClassBtn('classTI', d.classTI);
+          
+          document.getElementById('classStatusPCA').value = d.statusPCA;
+          document.getElementById('classDFD').value = d.dfd || '';
+          
+          this.toggleClassExtras();
+          
+          document.getElementById('classifyModal').classList.remove('hidden');
+        },
+        
+        closeClassifyModal() { document.getElementById('classifyModal').classList.add('hidden'); },
+
+        setClassBtn(field, value) {
+            const input = document.getElementById(field);
+            input.value = value;
+            const btnSim = document.getElementById(`btn_${field}_Sim`);
+            const btnNao = document.getElementById(`btn_${field}_Não`);
+            
+            btnSim.className = "px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition";
+            btnNao.className = "px-4 py-1.5 rounded-lg border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 transition";
+            
+            if(value === 'Sim') {
+                btnSim.className = "px-4 py-1.5 rounded-lg border border-green-500 bg-green-500 text-white font-bold shadow-sm transition";
+            } else if (value === 'Não') {
+                btnNao.className = "px-4 py-1.5 rounded-lg border border-red-500 bg-red-500 text-white font-bold shadow-sm transition";
+            }
+        },
+
+        toggleClassExtras() {
+            const status = document.getElementById('classStatusPCA').value;
+            const dfdBox = document.getElementById('boxClassDFD');
+            const rejectBox = document.getElementById('boxClassReject');
+            const routeBox = document.getElementById('boxClassRoute');
+            
+            dfdBox.classList.add('hidden');
+            rejectBox.classList.add('hidden');
+            routeBox.classList.add('hidden');
+
+            if(status === 'Deferido') dfdBox.classList.remove('hidden');
+            if(status === 'Indeferido') rejectBox.classList.remove('hidden');
+            if(status === 'Outro Encaminhamento') routeBox.classList.remove('hidden');
+        },
+
+        saveClassification(e) {
+          e.preventDefault();
+          const id = document.getElementById('classDemandId').value;
+          const status = document.getElementById('classStatusPCA').value;
+          
+          let rejectReason = '';
+          let routeDetail = '';
+          
+          if(status === 'Indeferido') {
+              rejectReason = document.getElementById('classRejectReason').value.trim();
+              if(!rejectReason) return this.showToast('Preencha o motivo do indeferimento.', 'alert');
+          }
+          if(status === 'Outro Encaminhamento') {
+              routeDetail = document.getElementById('classRoutingType').value;
+              if(!routeDetail) return this.showToast('Selecione a lista de destino.', 'alert');
+          }
+
+          const d = state.demands.find(x => x.id === id);
+          if(d) {
+            d.segment = document.getElementById('classSegment').value;
+            d.classEstoque = document.getElementById('classEstoque').value;
+            d.classAVN = document.getElementById('classAVN').value;
+            d.classAta = document.getElementById('classAta').value;
+            d.classTI = document.getElementById('classTI').value;
+            d.statusPCA = status;
+            d.dfd = document.getElementById('classDFD').value;
+            d.pcaFeedback = rejectReason;
+            d.routingDetail = routeDetail;
+            
+            this.persistData();
+            if(window.cloudSyncInstance) window.cloudSyncInstance.saveDemand(d);
+            this.renderAdminInbox();
+            this.closeClassifyModal();
+            this.showToast('Classificação salva! Demanda encaminhada.', 'success');
+          }
+        },
+
+        // ============================================
+        // MODAL DE VISUALIZAÇÃO DETALHADA
+        // ============================================
+
+        openViewDemandModal(id) {
+            const d = state.demands.find(x => x.id === id);
+            if(!d) return;
+            
+            document.getElementById('vdYear').textContent = d.yearPCA;
+            document.getElementById('vdTitle').textContent = d.title;
+            document.getElementById('vdSector').textContent = d.sector;
+            document.getElementById('vdUser').textContent = d.user;
+            document.getElementById('vdCpf').textContent = d.cpf;
+            document.getElementById('vdDateStamp').textContent = parseDate(d.dateStamp);
+            document.getElementById('vdQtyUnit').textContent = `${d.qty} ${d.unit}`;
+            document.getElementById('vdTotal').textContent = `R$ ${fmtMoney(d.total)}`;
+            document.getElementById('vdUnitVal').textContent = `Unitário: R$ ${fmtMoney(d.price)}`;
+            document.getElementById('vdDesc').textContent = d.desc;
+            document.getElementById('vdNeedJust').textContent = d.needJust;
+            document.getElementById('vdSipac').textContent = d.codeSIPAC;
+            document.getElementById('vdDateNeed').textContent = parseDateOnly(d.dateNeed); 
+            document.getElementById('vdPriority').textContent = d.priority;
+            
+            const linkEl = document.getElementById('vdLink');
+            if(d.link && d.link !== '-' && d.link.startsWith('http')) {
+                linkEl.href = d.link;
+                linkEl.classList.remove('hidden');
+            } else {
+                linkEl.classList.add('hidden');
+            }
+            
+            document.getElementById('viewDemandModal').classList.remove('hidden');
+        },
+        
+        closeViewDemandModal() {
+            document.getElementById('viewDemandModal').classList.add('hidden');
+        },
+
+        exportPCAExcel() {
+          if (typeof XLSX === 'undefined') return this.showToast('Biblioteca Excel não carregada.', 'alert');
+          const filterY = document.getElementById('filterAdminApprovedYear').value;
+          
+          let listD = state.demands.filter(d => d.statusPCA === 'Deferido' && d.codeSIPAC !== '0');
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
+          
+          if (listD.length === 0) return this.showToast('Nenhum dado aprovado para exportar neste período.', 'alert');
+
+          const rows = listD.map(d => ({
+            "Ano PCA": d.yearPCA,
+            "Cód. SIPAC": d.codeSIPAC,
+            "Item": d.title,
+            "Descrição": d.desc,
+            "Segmento": d.segment,
+            "Unidade": d.unit,
+            "Qtd": d.qty,
+            "Vl Unit (R$)": d.price,
+            "Total Estimado (R$)": d.total,
+            "Setor Requisitante": d.sector,
+            "Servidor": d.user,
+            "CPF": d.cpf,
+            "Data Desejada": d.dateNeed,
+            "Prioridade": d.priority,
+            "Justificativa Pri.": d.prioJust,
+            "Necessidade/Objeto": d.needJust,
+            "Estoque Almox?": d.classEstoque,
+            "Faz parte AVN?": d.classAVN,
+            "Saldo ATA?": d.classAta,
+            "TI?": d.classTI,
+            "Nº DFD": d.dfd,
+            "Status de Execução": d.executionStatus,
+            "Motivo Não Exec.": d.executionReason
+          }));
+
+          const ws = XLSX.utils.json_to_sheet(rows);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "PCA Oficial");
+          XLSX.writeFile(wb, `PCA_Oficial_${filterY === 'all' ? 'Completo' : filterY}_${new Date().toISOString().slice(0,10)}.xlsx`);
+        },
+
+        showToast(m, t='success') { 
+          const n=document.getElementById('toastNotification'); 
+          const c=document.getElementById('toastMessage');
+          const icon=document.getElementById('toastIcon');
+          c.textContent=m; 
+          
+          if(t === 'alert') {
+              n.firstElementChild.classList.remove('bg-gray-900', 'border-gray-700');
+              n.firstElementChild.classList.add('bg-red-600', 'border-red-700');
+              icon.innerHTML = '<i data-lucide="alert-octagon" class="w-4 h-4"></i>';
+          } else {
+              n.firstElementChild.classList.remove('bg-red-600', 'border-red-700');
+              n.firstElementChild.classList.add('bg-gray-900', 'border-gray-700');
+              icon.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>';
+          }
+          lucide.createIcons();
+          
+          n.classList.remove('translate-y-20','opacity-0'); 
+          setTimeout(()=>n.classList.add('translate-y-20','opacity-0'),4000); 
+        }
+      }; 
+      window.pcaApp = pcaApp; 
+      document.addEventListener('DOMContentLoaded', ()=>pcaApp.init());
+    })();
+  </script>
+</body>
+</html>
