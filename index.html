@@ -127,9 +127,9 @@
 
   <!-- APLICAÇÃO PRINCIPAL -->
   <div id="mainAppWrapper" class="hidden min-h-screen flex flex-col">
-    <!-- HEADER -->
+    <!-- HEADER SUPERIOR LIMPO -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm no-print">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20 gap-4">
           <div class="flex items-center gap-3">
             <div class="bg-autumn-primary text-white p-2.5 rounded-xl shadow-sm relative">
@@ -150,617 +150,709 @@
           </div>
 
           <div class="flex items-center gap-4">
+            <!-- Badge do Ano PCA Vigente no Cabeçalho -->
+            <div class="hidden sm:flex items-center gap-2 bg-autumn-bg border border-gray-200 px-3.5 py-2 rounded-2xl shadow-sm">
+              <i data-lucide="calendar-check-2" class="w-4 h-4 text-autumn-secondary"></i>
+              <div class="text-left">
+                <span class="block text-[9px] font-bold uppercase text-gray-400 leading-none">Vigência Ativa</span>
+                <span id="headerActiveYearBadge" class="text-xs font-black text-autumn-primary leading-tight">PCA-2026</span>
+              </div>
+            </div>
             <div id="userProfileArea" class="flex items-center gap-3"></div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bg-autumn-primary text-white shadow-inner">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex items-center justify-between overflow-x-auto py-2.5 text-xs font-semibold gap-2 custom-scrollbar">
-            <nav id="dynamicNavLinks" class="flex items-center gap-2 flex-nowrap flex-shrink-0"></nav>
-            <div id="windowToggleArea" class="flex-shrink-0 ml-auto flex items-center hidden"></div>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-      <!-- ============================================== -->
-      <!-- VIEW: BUSCA GLOBAL -->
-      <!-- ============================================== -->
-      <div id="view-search-results" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
-                <i data-lucide="search" class="w-3.5 h-3.5"></i> Resultado da Busca
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Pesquisa Global</h2>
-              <p class="text-xs text-gray-500 mt-1" id="searchResultSubtitle">Resultados encontrados em toda a base do PCA.</p>
-            </div>
-            <button onclick="window.pcaApp.clearSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
-              <i data-lucide="x-circle" class="w-4 h-4 text-gray-500"></i> Fechar Busca
-            </button>
-          </div>
-          <div id="searchResultsContainer" class="space-y-4"></div>
-        </div>
-      </div>
+    <!-- CORPO COM MENU LATERAL ESQUERDO + CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col lg:flex-row w-full">
       
-      <!-- ============================================== -->
-      <!-- VIEW: DASHBOARD / GOVERNANÇA ADMIN             -->
-      <!-- ============================================== -->
-      <div id="view-admin-dashboard" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
-                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Governança
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Painel de Indicadores (PCA)</h2>
-              <p class="text-xs text-gray-500 mt-1">Visão consolidada do planejamento, ranqueamento de setores e composição dos segmentos.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterDashYear" onchange="window.pcaApp.updateAdminDashboard()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-            </div>
+      <!-- MENU LATERAL ESQUERDO (SIDEBAR) -->
+      <aside class="w-full lg:w-64 xl:w-72 bg-autumn-primary text-white flex-shrink-0 lg:min-h-[calc(100vh-5rem)] lg:sticky lg:top-20 lg:self-start z-20 shadow-lg no-print flex flex-col justify-between p-4 gap-6">
+        <div class="space-y-3">
+          <div class="px-3 py-1 flex items-center justify-between border-b border-white/10 pb-2.5">
+            <span class="text-[10px] font-extrabold uppercase tracking-widest text-gray-300">Menu de Navegação</span>
+            <span id="sidebarYearPill" class="text-[10px] font-black bg-autumn-secondary text-white px-2 py-0.5 rounded-md">PCA-2026</span>
           </div>
-
-          <!-- KPIs -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-             <div class="bg-autumn-bg border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                <i data-lucide="calculator" class="w-20 h-20 absolute -right-4 -bottom-4 text-gray-200 opacity-50"></i>
-                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Total Geral Demandado</span>
-                <div class="text-3xl font-black text-autumn-primary" id="kpiDashTotal">R$ 0,00</div>
-                <div class="text-[11px] text-gray-500 font-semibold mt-2" id="kpiDashCount">0 demandas registradas</div>
-             </div>
-             <div class="bg-green-50 border border-green-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                <i data-lucide="check-circle" class="w-20 h-20 absolute -right-4 -bottom-4 text-green-200 opacity-50"></i>
-                <span class="text-[10px] font-bold text-green-700 uppercase tracking-wider block mb-1">Total Aprovado (Deferido)</span>
-                <div class="text-3xl font-black text-green-700" id="kpiDashAprovado">R$ 0,00</div>
-                <div class="text-[11px] text-green-600 font-semibold mt-2" id="kpiDashAprovadoPct">0% do total planejado</div>
-             </div>
-             <div class="bg-autumn-mustard/10 border border-autumn-mustard/30 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                <i data-lucide="clock" class="w-20 h-20 absolute -right-4 -bottom-4 text-autumn-mustard/20 opacity-50"></i>
-                <span class="text-[10px] font-bold text-autumn-secondary uppercase tracking-wider block mb-1">Pendente de Classificação</span>
-                <div class="text-3xl font-black text-autumn-secondary" id="kpiDashPendente">R$ 0,00</div>
-                <div class="text-[11px] text-autumn-secondary/80 font-semibold mt-2" id="kpiDashPendenteCount">0 demandas na fila</div>
-             </div>
-          </div>
-
-          <!-- Gráficos -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
-                <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-autumn-secondary"></i> Volume por Setor (R$)</h3>
-                <p class="text-[10px] text-gray-500 font-semibold mb-4">Total demandado por cada setor (independente do status).</p>
-                <div class="relative flex-1 min-h-[300px]">
-                   <canvas id="dashSectorChart"></canvas>
-                </div>
-             </div>
-             
-             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
-                <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-autumn-secondary"></i> Distribuição por Segmento</h3>
-                <p class="text-[10px] text-gray-500 font-semibold mb-4">Composição de gastos por segmento (apenas classificados).</p>
-                <div class="relative flex-1 min-h-[300px]">
-                   <canvas id="dashSegmentChart"></canvas>
-                </div>
-             </div>
-          </div>
-          
-          <!-- Lista detalhada Segmento x Setor -->
-          <div class="mt-6 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-             <h3 class="text-sm font-black text-gray-800 mb-4 flex items-center gap-2 border-b border-gray-100 pb-3"><i data-lucide="list-ordered" class="w-4 h-4 text-autumn-secondary"></i> Detalhamento: Segmentos x Setores Demandantes</h3>
-             <div id="dashSegmentBreakdown" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                 <!-- Injetado via JS -->
-             </div>
-          </div>
-
+          <!-- Links de navegação empilhados verticalmente no desktop e em grade no celular -->
+          <nav id="dynamicNavLinks" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-1.5 text-xs font-semibold"></nav>
         </div>
-      </div>
 
-      <!-- ============================================== -->
-      <!-- ÁREA DO SOLICITANTE                            -->
-      <!-- ============================================== -->
-      
-      <!-- VIEW: NOVA DEMANDA (SOLICITANTE) -->
-      <div id="view-form-demand" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm relative overflow-hidden">
-          
-          <div class="mb-8 border-b border-gray-200 pb-5">
-            <h2 class="text-2xl font-black text-autumn-primary flex items-center gap-2">
-              <i data-lucide="file-plus-2" class="w-6 h-6 text-autumn-secondary"></i> Nova Demanda para o PCA
-            </h2>
-            <p class="text-xs text-gray-500 mt-1">Preencha os dados técnicos e justificativas para a contratação/aquisição.</p>
+        <!-- Controle da Janela PCA na base do Menu Lateral -->
+        <div id="windowToggleArea" class="hidden pt-4 border-t border-white/10"></div>
+      </aside>
+
+      <!-- CONTEÚDO PRINCIPAL À DIREITA -->
+      <main class="flex-1 min-w-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ============================================== -->
+        <!-- VIEW: BUSCA GLOBAL -->
+        <!-- ============================================== -->
+        <div id="view-search-results" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
+                  <i data-lucide="search" class="w-3.5 h-3.5"></i> Resultado da Busca
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Pesquisa Global</h2>
+                <p class="text-xs text-gray-500 mt-1" id="searchResultSubtitle">Resultados encontrados na base do PCA.</p>
+              </div>
+              <button onclick="window.pcaApp.clearSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
+                <i data-lucide="x-circle" class="w-4 h-4 text-gray-500"></i> Fechar Busca
+              </button>
+            </div>
+            <div id="searchResultsContainer" class="space-y-4"></div>
           </div>
-
-          <div id="demandLockedMessage" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center flex flex-col items-center justify-center">
-            <div class="bg-red-100 text-red-600 p-5 rounded-full mb-5 shadow-sm"><i data-lucide="lock" class="w-10 h-10"></i></div>
-            <h3 class="text-xl font-black text-gray-800 mb-2">Janela de Cadastros Fechada</h3>
-            <p class="text-sm text-gray-500 max-w-md leading-relaxed">
-              O período para envio de novas demandas para o Plano de Contratações Anual está encerrado no momento, conforme cronograma da Superintendência de Compras. 
-              <br><br><span class="font-bold text-gray-700">Aguarde a próxima abertura da janela.</span>
-            </p>
-          </div>
-
-          <div id="demandFormContainer">
-            <form id="pcaDemandForm" onsubmit="window.pcaApp.submitDemand(event)" class="space-y-8 text-sm">
-              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
-                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
-                  <i data-lucide="user" class="w-4 h-4 text-autumn-secondary"></i> 1. Identificação do Requisitante
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Ano do PCA <span class="text-red-500">*</span></label>
-                    <input type="text" id="demYearPCA" readonly class="w-full px-3 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-500 font-black text-xs cursor-not-allowed select-none focus:outline-none" title="O ano vigente é gerido pelo Agente de Compras.">
-                  </div>
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Setor Requisitante <span class="text-red-500">*</span></label>
-                    <select id="demSector" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer"></select>
-                  </div>
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Nome do Servidor <span class="text-red-500">*</span></label>
-                    <input type="text" id="demUser" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs">
-                  </div>
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">CPF do Servidor <span class="text-red-500">*</span></label>
-                    <input type="text" id="demCpf" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-mono font-medium text-xs">
-                  </div>
+        </div>
+        
+        <!-- ============================================== -->
+        <!-- VIEW: DASHBOARD / GOVERNANÇA ADMIN             -->
+        <!-- ============================================== -->
+        <div id="view-admin-dashboard" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-mustard/20 text-autumn-secondary text-[11px] font-bold mb-2 border border-autumn-mustard/30">
+                  <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Governança
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Painel de Indicadores (PCA)</h2>
+                <p class="text-xs text-gray-500 mt-1">Visão consolidada do planejamento vinculada ao ano vigente selecionado.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterDashYear" onchange="window.pcaApp.updateAdminDashboard()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
                 </div>
               </div>
+            </div>
 
-              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
-                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
-                  <i data-lucide="package" class="w-4 h-4 text-autumn-secondary"></i> 2. Detalhes do Objeto / Serviço
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+               <div class="bg-autumn-bg border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                  <i data-lucide="calculator" class="w-20 h-20 absolute -right-4 -bottom-4 text-gray-200 opacity-50"></i>
+                  <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Total Geral Demandado</span>
+                  <div class="text-3xl font-black text-autumn-primary" id="kpiDashTotal">R$ 0,00</div>
+                  <div class="text-[11px] text-gray-500 font-semibold mt-2" id="kpiDashCount">0 demandas registradas</div>
+               </div>
+               <div class="bg-green-50 border border-green-200 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                  <i data-lucide="check-circle" class="w-20 h-20 absolute -right-4 -bottom-4 text-green-200 opacity-50"></i>
+                  <span class="text-[10px] font-bold text-green-700 uppercase tracking-wider block mb-1">Total Aprovado (Deferido)</span>
+                  <div class="text-3xl font-black text-green-700" id="kpiDashAprovado">R$ 0,00</div>
+                  <div class="text-[11px] text-green-600 font-semibold mt-2" id="kpiDashAprovadoPct">0% do total planejado</div>
+               </div>
+               <div class="bg-autumn-mustard/10 border border-autumn-mustard/30 rounded-2xl p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                  <i data-lucide="clock" class="w-20 h-20 absolute -right-4 -bottom-4 text-autumn-mustard/20 opacity-50"></i>
+                  <span class="text-[10px] font-bold text-autumn-secondary uppercase tracking-wider block mb-1">Pendente de Classificação</span>
+                  <div class="text-3xl font-black text-autumn-secondary" id="kpiDashPendente">R$ 0,00</div>
+                  <div class="text-[11px] text-autumn-secondary/80 font-semibold mt-2" id="kpiDashPendenteCount">0 demandas na fila</div>
+               </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+               <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
+                  <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-autumn-secondary"></i> Volume por Setor (R$)</h3>
+                  <p class="text-[10px] text-gray-500 font-semibold mb-4">Total demandado por cada setor no período selecionado.</p>
+                  <div class="relative flex-1 min-h-[300px]">
+                     <canvas id="dashSectorChart"></canvas>
+                  </div>
+               </div>
+               
+               <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col">
+                  <h3 class="text-sm font-black text-gray-800 mb-1 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-autumn-secondary"></i> Distribuição por Segmento</h3>
+                  <p class="text-[10px] text-gray-500 font-semibold mb-4">Composição de gastos por segmento (apenas classificados).</p>
+                  <div class="relative flex-1 min-h-[300px]">
+                     <canvas id="dashSegmentChart"></canvas>
+                  </div>
+               </div>
+            </div>
+
+            <!-- CARD: PANORAMA INTERATIVO DE SEGMENTOS X DEMANDAS X SETORES -->
+            <div class="mt-8 bg-autumn-bg border border-gray-200 rounded-3xl p-6 shadow-sm">
+               <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-gray-200 pb-4 mb-5">
+                  <div>
+                     <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-primary/10 text-autumn-primary text-[10px] font-black uppercase mb-1.5">
+                       <i data-lucide="layers" class="w-3.5 h-3.5 text-autumn-secondary"></i> Panorama Analítico por Item
+                     </div>
+                     <h3 class="text-lg font-black text-autumn-primary">Consulta de Demandas por Segmento e Setor</h3>
+                     <p class="text-xs text-gray-500">Selecione um segmento e uma demanda específica para visualizar quanto já foi pedido por cada setor.</p>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
+                     <div class="bg-white border border-gray-300 rounded-xl px-3 py-1.5 shadow-sm">
+                        <label class="block text-[9px] font-bold text-gray-400 uppercase">1. Filtrar Segmento</label>
+                        <select id="dashExpSegment" onchange="window.pcaApp.onChangeDashExplorerSegment()" class="bg-transparent text-xs font-bold text-gray-800 outline-none w-full cursor-pointer py-0.5">
+                           <option value="all">Todos os Segmentos</option>
+                        </select>
+                     </div>
+                     <div class="bg-white border border-gray-300 rounded-xl px-3 py-1.5 shadow-sm">
+                        <label class="block text-[9px] font-bold text-gray-400 uppercase">2. Selecionar Demanda / Objeto</label>
+                        <select id="dashExpDemand" onchange="window.pcaApp.renderDashExplorerResults()" class="bg-transparent text-xs font-bold text-autumn-primary outline-none w-full cursor-pointer py-0.5">
+                           <option value="all">Todas as Demandas</option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+
+               <div id="dashExplorerContainer" class="space-y-4">
+                  <!-- Preenchido via JS -->
+               </div>
+            </div>
+            
+            <!-- Lista detalhada Segmento x Setor -->
+            <div class="mt-6 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+               <h3 class="text-sm font-black text-gray-800 mb-4 flex items-center gap-2 border-b border-gray-100 pb-3"><i data-lucide="list-ordered" class="w-4 h-4 text-autumn-secondary"></i> Resumo Geral: Segmentos x Setores Demandantes</h3>
+               <div id="dashSegmentBreakdown" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                   <!-- Injetado via JS -->
+               </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- ÁREA DO SOLICITANTE                            -->
+        <!-- ============================================== -->
+        
+        <!-- VIEW: NOVA DEMANDA (SOLICITANTE) -->
+        <div id="view-form-demand" class="space-y-6 hidden">
+          
+          <!-- PAINEL DE CONTROLE DE LIMITE ORÇAMENTÁRIO DO SETOR (BARRA REGRESSIVA) -->
+          <div id="requesterBudgetCardForm" class="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200 shadow-sm"></div>
+
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm relative overflow-hidden">
+            
+            <div class="mb-8 border-b border-gray-200 pb-5">
+              <h2 class="text-2xl font-black text-autumn-primary flex items-center gap-2">
+                <i data-lucide="file-plus-2" class="w-6 h-6 text-autumn-secondary"></i> Nova Demanda para o PCA
+              </h2>
+              <p class="text-xs text-gray-500 mt-1">Preencha os dados técnicos e justificativas para a contratação/aquisição.</p>
+            </div>
+
+            <div id="demandLockedMessage" class="hidden bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center flex flex-col items-center justify-center">
+              <div class="bg-red-100 text-red-600 p-5 rounded-full mb-5 shadow-sm"><i data-lucide="lock" class="w-10 h-10"></i></div>
+              <h3 class="text-xl font-black text-gray-800 mb-2">Janela de Cadastros Fechada</h3>
+              <p class="text-sm text-gray-500 max-w-md leading-relaxed">
+                O período para envio de novas demandas para o Plano de Contratações Anual está encerrado no momento, conforme cronograma da Superintendência de Compras. 
+                <br><br><span class="font-bold text-gray-700">Aguarde a próxima abertura da janela.</span>
+              </p>
+            </div>
+
+            <div id="demandFormContainer">
+              <form id="pcaDemandForm" autocomplete="off" onsubmit="window.pcaApp.submitDemand(event)" class="space-y-8 text-sm">
+                <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                  <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <i data-lucide="user" class="w-4 h-4 text-autumn-secondary"></i> 1. Identificação do Requisitante
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Ano do PCA <span class="text-red-500">*</span></label>
+                      <input type="text" id="demYearPCA" readonly class="w-full px-3 py-2 rounded-xl border border-gray-300 bg-gray-100 text-gray-500 font-black text-xs cursor-not-allowed select-none focus:outline-none" title="O ano vigente é gerido pelo Agente de Compras.">
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Setor Requisitante <span class="text-red-500">*</span></label>
+                      <select id="demSector" required onchange="window.pcaApp.renderSectorBudgetBars()" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer"></select>
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Nome do Servidor <span class="text-red-500">*</span></label>
+                      <input type="text" id="demUser" autocomplete="off" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs">
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">CPF do Servidor <span class="text-red-500">*</span></label>
+                      <input type="text" id="demCpf" autocomplete="off" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-mono font-medium text-xs">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                  <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <i data-lucide="package" class="w-4 h-4 text-autumn-secondary"></i> 2. Detalhes do Objeto / Serviço
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
+                        CÓDIGO SIPAC <span class="text-red-500 ml-1">*</span>
+                        <div class="relative group inline-block ml-1.5">
+                          <i data-lucide="info" class="w-4 h-4 text-autumn-secondary cursor-help"></i>
+                          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-lg pointer-events-none leading-relaxed">
+                            Mesmo não tendo um item cadastrado com código, esta caixa deve ser preenchida obrigatoriamente com o número <strong>0</strong>.
+                            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rotate-45"></div>
+                          </div>
+                        </div>
+                      </label>
+                      <input type="text" id="demCode" autocomplete="off" required placeholder="Ex: 0 ou 12345" onblur="window.pcaApp.checkSipacMemory(this.value)" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs font-mono text-autumn-primary">
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Unidade de Medida <span class="text-red-500">*</span></label>
+                      <select id="demUnit" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer">
+                        <option value="">Selecione...</option><option value="Unidade">Unidade</option><option value="Bobina">Bobina</option><option value="Caixa">Caixa</option><option value="Dia">Dia</option><option value="Dúzia">Dúzia</option><option value="Fardo">Fardo</option><option value="Frasco">Frasco</option><option value="Galão">Galão</option><option value="Hora">Hora</option><option value="Jogo">Jogo</option><option value="Kit">Kit</option><option value="Lata">Lata</option><option value="Litro">Litro</option><option value="Metro cúbico">Metro cúbico</option><option value="Metro linear">Metro linear</option><option value="Metro quadrado">Metro quadrado</option><option value="Miligrama">Miligrama</option><option value="Mililitro">Mililitro</option><option value="Mês">Mês</option><option value="Pacote">Pacote</option><option value="Palavra">Palavra</option><option value="Par">Par</option><option value="Peça">Peça</option><option value="Quilômetro">Quilômetro</option><option value="Quilo">Quilo</option><option value="Rolo">Rolo</option><option value="Saco">Saco</option><option value="Serviço">Serviço</option><option value="Tonelada">Tonelada</option>
+                      </select>
+                    </div>
+                  </div>
                   <div>
                     <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
-                      CÓDIGO SIPAC <span class="text-red-500 ml-1">*</span>
+                      Item (Descrição Sucinta) <span class="text-red-500 ml-1">*</span>
                       <div class="relative group inline-block ml-1.5">
                         <i data-lucide="info" class="w-4 h-4 text-autumn-secondary cursor-help"></i>
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-center shadow-lg pointer-events-none leading-relaxed">
-                          Mesmo não tendo um item cadastrado com código, esta caixa deve ser preenchida obrigatoriamente com o número <strong>0</strong>.
-                          <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rotate-45"></div>
+                        <div class="absolute bottom-full left-0 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-left shadow-lg pointer-events-none leading-relaxed">
+                          Caso não tenha código no SIPAC, este campo deve ser obrigatoriamente preenchido com as informações claras do item desejado. Evite termos genéricos.
+                          <div class="absolute -bottom-1 left-4 w-3 h-3 bg-gray-800 rotate-45"></div>
                         </div>
                       </div>
                     </label>
-                    <input type="text" id="demCode" required placeholder="Ex: 0 ou 12345" onblur="window.pcaApp.checkSipacMemory(this.value)" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs font-mono text-autumn-primary">
+                    <input type="text" id="demTitle" autocomplete="off" required minlength="5" placeholder="Ex: Notebook Core i7 16GB" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm">
                   </div>
                   <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Unidade de Medida <span class="text-red-500">*</span></label>
-                    <select id="demUnit" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs cursor-pointer">
-                      <option value="">Selecione...</option><option value="Unidade">Unidade</option><option value="Bobina">Bobina</option><option value="Caixa">Caixa</option><option value="Dia">Dia</option><option value="Dúzia">Dúzia</option><option value="Fardo">Fardo</option><option value="Frasco">Frasco</option><option value="Galão">Galão</option><option value="Hora">Hora</option><option value="Jogo">Jogo</option><option value="Kit">Kit</option><option value="Lata">Lata</option><option value="Litro">Litro</option><option value="Metro cúbico">Metro cúbico</option><option value="Metro linear">Metro linear</option><option value="Metro quadrado">Metro quadrado</option><option value="Miligrama">Miligrama</option><option value="Mililitro">Mililitro</option><option value="Mês">Mês</option><option value="Pacote">Pacote</option><option value="Palavra">Palavra</option><option value="Par">Par</option><option value="Peça">Peça</option><option value="Quilômetro">Quilômetro</option><option value="Quilo">Quilo</option><option value="Rolo">Rolo</option><option value="Saco">Saco</option><option value="Serviço">Serviço</option><option value="Tonelada">Tonelada</option>
-                    </select>
+                    <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
+                      Descrição Completa e Detalhada <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <textarea id="demDesc" autocomplete="off" required rows="3" minlength="15" placeholder="Especificações técnicas, dimensões, características (Mín. 15 caracteres)..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
                   </div>
-                </div>
-                <div>
-                  <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
-                    Item (Descrição Sucinta) <span class="text-red-500 ml-1">*</span>
-                    <div class="relative group inline-block ml-1.5">
-                      <i data-lucide="info" class="w-4 h-4 text-autumn-secondary cursor-help"></i>
-                      <div class="absolute bottom-full left-0 mb-2 w-64 p-3 bg-gray-800 text-white text-[11px] font-normal rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 text-left shadow-lg pointer-events-none leading-relaxed">
-                        Caso não tenha código no SIPAC, este campo deve ser obrigatoriamente preenchido com as informações claras do item desejado. Evite termos genéricos.
-                        <div class="absolute -bottom-1 left-4 w-3 h-3 bg-gray-800 rotate-45"></div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Quantidade Total (Inteiro) <span class="text-red-500">*</span></label>
+                      <input type="text" id="demQty" autocomplete="off" required oninput="window.pcaApp.formatQty(this)" placeholder="Apenas números exatos" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-center">
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Valor Unit. Estimado <span class="text-red-500">*</span></label>
+                      <div class="relative">
+                        <span class="absolute left-3 top-2 font-black text-gray-400">R$</span>
+                        <input type="text" id="demPrice" autocomplete="off" required oninput="window.pcaApp.formatMoneyInput(this)" placeholder="0,00" class="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-right">
                       </div>
                     </div>
-                  </label>
-                  <input type="text" id="demTitle" required minlength="5" placeholder="Ex: Notebook Core i7 16GB" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm">
-                </div>
-                <div>
-                  <label class="font-bold text-gray-700 mb-1 text-xs flex items-center">
-                    Descrição Completa e Detalhada <span class="text-red-500 ml-1">*</span>
-                  </label>
-                  <textarea id="demDesc" required rows="3" minlength="15" placeholder="Especificações técnicas, dimensões, características (Mín. 15 caracteres)..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Quantidade Total (Inteiro) <span class="text-red-500">*</span></label>
-                    <input type="text" id="demQty" required oninput="window.pcaApp.formatQty(this)" placeholder="Apenas números exatos" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-center">
-                  </div>
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Valor Unit. Estimado <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                      <span class="absolute left-3 top-2 font-black text-gray-400">R$</span>
-                      <input type="text" id="demPrice" required oninput="window.pcaApp.formatMoneyInput(this)" placeholder="0,00" class="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-sm text-right">
+                    <div class="bg-gray-100 p-2 rounded-xl border border-gray-200 text-right">
+                      <span class="block text-[10px] text-gray-500 font-bold uppercase">Valor Total Estimado</span>
+                      <span id="demTotalDisplay" class="text-lg font-black text-autumn-primary">R$ 0,00</span>
                     </div>
                   </div>
-                  <div class="bg-gray-100 p-2 rounded-xl border border-gray-200 text-right">
-                    <span class="block text-[10px] text-gray-500 font-bold uppercase">Valor Total Estimado</span>
-                    <span id="demTotalDisplay" class="text-lg font-black text-autumn-primary">R$ 0,00</span>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Link de Referência (Pesquisa de Preço na Internet)</label>
+                    <input type="url" id="demLink" autocomplete="off" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs text-blue-600">
                   </div>
                 </div>
-                <div>
-                  <label class="block font-bold text-gray-700 mb-1 text-xs">Link de Referência (Pesquisa de Preço na Internet)</label>
-                  <input type="url" id="demLink" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs text-blue-600">
-                </div>
-              </div>
 
-              <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
-                <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
-                  <i data-lucide="calendar-clock" class="w-4 h-4 text-autumn-secondary"></i> 3. Prazos e Justificativas
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Grau de Prioridade <span class="text-red-500">*</span></label>
-                    <select id="demPriority" required onchange="window.pcaApp.togglePriorityJust()" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs cursor-pointer">
-                      <option value="Baixa">Baixa</option>
-                      <option value="Média" selected>Média</option>
-                      <option value="Alta">Alta</option>
-                    </select>
+                <div class="bg-autumn-bg p-5 rounded-2xl border border-gray-200 space-y-4 shadow-sm">
+                  <h3 class="font-bold text-autumn-primary border-b border-gray-300 pb-2 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <i data-lucide="calendar-clock" class="w-4 h-4 text-autumn-secondary"></i> 3. Prazos e Justificativas
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Grau de Prioridade <span class="text-red-500">*</span></label>
+                      <select id="demPriority" required onchange="window.pcaApp.togglePriorityJust()" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-bold text-xs cursor-pointer">
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média" selected>Média</option>
+                        <option value="Alta">Alta</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Data final para recebimento <span class="text-red-500">*</span></label>
+                      <input type="date" id="demDate" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs text-gray-800 cursor-pointer">
+                    </div>
                   </div>
                   <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Data final para recebimento <span class="text-red-500">*</span></label>
-                    <input type="date" id="demDate" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white font-medium text-xs text-gray-800 cursor-pointer">
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Prioridade</label>
+                    <input type="text" id="demPrioJust" autocomplete="off" disabled placeholder="Só preencher se a prioridade for Alta." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-gray-100 text-gray-500 font-medium text-xs transition-colors">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Necessidade da Contratação <span class="text-red-500">*</span></label>
+                    <textarea id="demNeedJust" autocomplete="off" required rows="3" minlength="15" placeholder="Explique o problema e onde o item será aplicado..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
                   </div>
                 </div>
-                <div>
-                  <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Prioridade</label>
-                  <input type="text" id="demPrioJust" disabled placeholder="Só preencher se a prioridade for Alta." class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-gray-100 text-gray-500 font-medium text-xs transition-colors">
+                <div class="flex justify-end pt-4">
+                  <button type="submit" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center gap-2">
+                    <i data-lucide="send" class="w-5 h-5"></i> Enviar Demanda para o PCA
+                  </button>
                 </div>
-                <div>
-                  <label class="block font-bold text-gray-700 mb-1 text-xs">Justificativa da Necessidade da Contratação <span class="text-red-500">*</span></label>
-                  <textarea id="demNeedJust" required rows="3" minlength="15" placeholder="Explique o problema e onde o item será aplicado..." class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary focus:outline-none bg-white text-xs"></textarea>
-                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: MINHAS DEMANDAS (SOLICITANTE) -->
+        <div id="view-my-demands" class="space-y-6 hidden">
+          
+          <!-- PAINEL DE CONTROLE DE LIMITE ORÇAMENTÁRIO DO SETOR (BARRA REGRESSIVA) -->
+          <div id="requesterBudgetCardMyDemands" class="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200 shadow-sm"></div>
+
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <h2 class="text-xl font-black text-autumn-primary">Minhas Demandas Cadastradas</h2>
+                <p class="text-xs text-gray-500 mt-1">Acompanhe as solicitações do seu setor para o ano vigente selecionado.</p>
               </div>
-              <div class="flex justify-end pt-4">
-                <button type="submit" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg transition-transform active:scale-95 flex items-center gap-2">
-                  <i data-lucide="send" class="w-5 h-5"></i> Enviar Demanda para o PCA
+              <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner flex-1 sm:flex-none">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterMyYear" onchange="window.pcaApp.renderMyDemands()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
+                </div>
+                <button onclick="window.pcaApp.navigate('form-demand')" class="bg-autumn-secondary hover:bg-autumn-secondaryHover text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Nova Demanda
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW: MINHAS DEMANDAS (SOLICITANTE) -->
-      <div id="view-my-demands" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <h2 class="text-xl font-black text-autumn-primary">Minhas Demandas Cadastradas</h2>
-              <p class="text-xs text-gray-500 mt-1">Acompanhe as solicitações do seu setor por ano de contratação.</p>
             </div>
-            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner flex-1 sm:flex-none">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterMyYear" onchange="window.pcaApp.renderMyDemands()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                  <option value="all">Todos os Anos PCA</option>
-                </select>
-              </div>
-              <button onclick="window.pcaApp.navigate('form-demand')" class="bg-autumn-secondary hover:bg-autumn-secondaryHover text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-                <i data-lucide="plus" class="w-4 h-4"></i> Nova Demanda
-              </button>
-            </div>
-          </div>
-          <div id="myDemandsContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-
-      <!-- ============================================== -->
-      <!-- ÁREA DO ADMIN / AGENTE DE COMPRAS              -->
-      <!-- ============================================== -->
-
-      <!-- VIEW 1: CAIXA DE ENTRADA / INBOX -->
-      <div id="view-admin-inbox" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-olive/20 text-autumn-primary text-[11px] font-bold mb-2 border border-autumn-olive/30">
-                <i data-lucide="inbox" class="w-3.5 h-3.5"></i> Caixa de Entrada
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Demandas Pendentes</h2>
-              <p class="text-xs text-gray-500 mt-1">Aqui constam apenas as demandas novas aguardando classificação técnica.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterAdminInboxYear" onchange="window.pcaApp.renderAdminInbox()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                  <option value="all">Todos os Anos</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div id="adminInboxContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW 2: FILA DE CATALOGAÇÃO -->
-      <div id="view-admin-catalog" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
-                <i data-lucide="tag" class="w-3.5 h-3.5"></i> Pendência de Catálogo
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Solicitar Catalogação</h2>
-              <p class="text-xs text-gray-500 mt-1">Demandas registradas com código SIPAC "0". Cadastre o código definitivo para enviá-las à Entrada.</p>
-            </div>
-          </div>
-          <div id="adminCatalogContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW 3: DEMANDAS APROVADAS NO PCA -->
-      <div id="view-admin-approved" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 text-[11px] font-bold mb-2 border border-green-200">
-                <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Oficial
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Demandas do PCA (Aprovadas)</h2>
-              <p class="text-xs text-gray-500 mt-1">Acesso completo e detalhado aos itens que foram classificados e deferidos.</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterAdminApprovedYear" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                  <option value="all">Todos os Anos</option>
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterAdminApprovedSector" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                </select>
-              </div>
-              <button onclick="window.pcaApp.exportPCAExcel()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-                <i data-lucide="download" class="w-4 h-4 text-autumn-secondary"></i> Exportar PCA
-              </button>
-            </div>
-          </div>
-          <div id="adminApprovedContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW 3.5: DEMANDAS INDEFERIDAS / NÃO CADASTRADAS -->
-      <div id="view-admin-rejected" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 text-[11px] font-bold mb-2 border border-red-200">
-                <i data-lucide="x-octagon" class="w-3.5 h-3.5"></i> Rejeitadas
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Demandas Indeferidas ou Não Cadastradas</h2>
-              <p class="text-xs text-gray-500 mt-1">Histórico de solicitações que foram negadas ou canceladas no PCA.</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRejYear" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                  <option value="all">Todos os Anos</option>
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRejSector" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRejSegment" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
-                </select>
-              </div>
-            </div>
-          </div>
-          <div id="adminRejectedContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW 4: POR SEGMENTO (Agrupamento SIPAC) -->
-      <div id="view-admin-segments" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[11px] font-bold mb-2 border border-purple-200">
-                <i data-lucide="layers" class="w-3.5 h-3.5"></i> Agrupamento
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Demandas por Segmento</h2>
-              <p class="text-xs text-gray-500 mt-1">Consolide as demandas de todos os setores agrupadas pelo código SIPAC.</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterSegYear" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterSegGroup" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-            </div>
-          </div>
-          <div id="adminSegmentsContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW NOVO: OUTROS ENCAMINHAMENTOS -->
-      <div id="view-admin-routings" class="space-y-6 hidden">
-        <div class="print-only-header text-center mb-8 border-b-2 border-slate-800 pb-4">
-            <h1 class="text-2xl font-black uppercase tracking-wider text-slate-900">Relatório: Outros Encaminhamentos</h1>
-            <p id="pdf-timestamp-routing" class="text-xs text-slate-600 mt-1 font-bold"></p>
-        </div>
-        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm no-print">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
-                <i data-lucide="forward" class="w-3.5 h-3.5"></i> Redirecionadas
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Outros Encaminhamentos</h2>
-              <p class="text-xs text-gray-500 mt-1">Lista de demandas que não entrarão no PCA (Ex: Terceirizados, Móveis Padronizados).</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRoutYear" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRoutSector" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
-                <i data-lucide="list-tree" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterRoutType" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                  <option value="all">Todos os Tipos</option>
-                  <option value="É Item da lista dos postos Terceirizados">Postos Terceirizados</option>
-                  <option value="É Item da lista de Móveis Padronizados">Móveis Padronizados</option>
-                  <option value="É Item da lista de Materiais de Expediente Padronizados">Mat. Expediente Padronizados</option>
-                  <option value="É Item da lista de TIC">Itens de TIC</option>
-                </select>
-              </div>
-              <button onclick="window.pcaApp.printRoutingReport()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
-                <i data-lucide="printer" class="w-4 h-4 text-gray-500"></i> Relatório PDF
-              </button>
-            </div>
-          </div>
-        </div>
-        <div id="adminRoutingsContainer" class="space-y-4"></div>
-      </div>
-
-      <!-- VIEW 5: ACOMPANHAMENTO E STATUS (Execução) -->
-      <div id="view-admin-tracking" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold mb-2 border border-amber-200">
-                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Acompanhamento
-              </div>
-              <h2 class="text-2xl font-black text-autumn-primary">Gerenciar Status de Execução</h2>
-              <p class="text-xs text-gray-500 mt-1">Filtre por setor e atualize a situação do processo licitatório/compra para dar feedback ao demandante.</p>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
-              <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner w-full sm:w-auto">
-                <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
-                <select id="filterTrackSector" onchange="window.pcaApp.renderAdminTracking()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
-                </select>
-              </div>
-            </div>
-          </div>
-          <div id="adminTrackingContainer" class="space-y-4"></div>
-        </div>
-      </div>
-
-      <!-- VIEW 6: CONFIGURAÇÕES (ADMIN) -->
-      <div id="view-admin-settings" class="space-y-6 hidden">
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2">
-                <i data-lucide="calendar-check" class="w-5 h-5 text-autumn-secondary"></i> Ano PCA Vigente
-              </h2>
-              <p class="text-[11px] text-gray-500 mt-1">Defina o ano base atual para fixá-lo no formulário de demandas.</p>
-            </div>
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-              <select id="settingActiveYear" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-sm font-black text-autumn-primary bg-gray-50 cursor-pointer"></select>
-              <button onclick="window.pcaApp.saveActiveYear()" class="bg-autumn-primary text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex items-center gap-2 shadow-sm">
-                <i data-lucide="save" class="w-4 h-4"></i> Salvar Parâmetro
-              </button>
-            </div>
+            <div id="myDemandsContainer" class="space-y-4"></div>
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col lg:flex-row gap-6">
-          <div class="w-full lg:w-1/3 space-y-4 border-b lg:border-b-0 lg:border-r border-gray-100 pb-6 lg:pb-0 lg:pr-6">
-            <div class="border-b border-gray-200 pb-3 flex justify-between items-start mb-4">
+
+        <!-- ============================================== -->
+        <!-- ÁREA DO ADMIN / AGENTE DE COMPRAS              -->
+        <!-- ============================================== -->
+
+        <!-- VIEW 1: CAIXA DE ENTRADA / INBOX -->
+        <div id="view-admin-inbox" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
               <div>
-                <h2 id="userFormTitle" class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5 text-autumn-secondary"></i> Cadastrar Usuário</h2>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-autumn-olive/20 text-autumn-primary text-[11px] font-bold mb-2 border border-autumn-olive/30">
+                  <i data-lucide="inbox" class="w-3.5 h-3.5"></i> Caixa de Entrada
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Demandas Pendentes</h2>
+                <p class="text-xs text-gray-500 mt-1">Aqui constam apenas as demandas novas aguardando classificação técnica.</p>
               </div>
-              <button type="button" id="cancelUserEditBtn" onclick="window.pcaApp.cancelEditUser()" class="hidden text-[10px] text-gray-600 hover:text-gray-900 font-bold px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg transition border border-gray-300">Cancelar</button>
-            </div>
-            <form id="newUserForm" onsubmit="window.pcaApp.handleCreateUser(event)" class="space-y-3">
-              <input type="hidden" id="editUserId">
-              <div>
-                <label class="block font-bold text-gray-700 mb-1 text-xs">Nome Completo:</label>
-                <input type="text" id="newUserName" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
-              </div>
-              <div>
-                <label class="block font-bold text-gray-700 mb-1 text-xs">CPF:</label>
-                <input type="text" id="newUserCpf" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
-              </div>
-              <div>
-                <label class="block font-bold text-gray-700 mb-1 text-xs">SIAPE (Login):</label>
-                <input type="text" id="newUserLogin" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Setor:</label>
-                    <select id="newUserSector" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer"></select>
-                  </div>
-                  <div>
-                    <label class="block font-bold text-gray-700 mb-1 text-xs">Perfil:</label>
-                    <select id="newUserRole" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer">
-                        <option value="solicitante">Solicitante</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                  </div>
-              </div>
-              <div>
-                <label class="block font-bold text-gray-700 mb-1 text-xs">Senha Inicial:</label>
-                <div class="flex gap-2">
-                  <input type="text" id="newUserPassword" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono font-bold text-autumn-primary">
-                  <button type="button" onclick="window.pcaApp.generateRandomPassword()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-xl text-xs font-bold transition border border-gray-200 shadow-sm">Gerar</button>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterAdminInboxYear" onchange="window.pcaApp.renderAdminInbox()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
                 </div>
               </div>
-              <button type="submit" class="w-full bg-autumn-primary text-white px-3 py-3 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex justify-center items-center gap-2 mt-2 shadow-sm"><i data-lucide="check" class="w-4 h-4"></i> Salvar Acesso</button>
-            </form>
+            </div>
+            <div id="adminInboxContainer" class="space-y-4"></div>
           </div>
-          
-          <div class="w-full lg:w-2/3 flex flex-col h-[400px]">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-3 gap-2">
-              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2 whitespace-nowrap"><i data-lucide="users" class="w-5 h-5 text-autumn-secondary"></i> Usuários da Plataforma</h2>
-              <div class="flex items-center gap-2 w-full justify-end">
-                <input type="text" id="searchUsersInput" oninput="window.pcaApp.filterUsersList(this.value)" placeholder="Buscar SIAPE ou Nome..." class="w-full max-w-[200px] px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-autumn-secondary outline-none">
-                <span id="userCountBadge" class="bg-gray-100 border border-gray-200 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider whitespace-nowrap">0 cadastrados</span>
+        </div>
+
+        <!-- VIEW 2: FILA DE CATALOGAÇÃO -->
+        <div id="view-admin-catalog" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
+                  <i data-lucide="tag" class="w-3.5 h-3.5"></i> Pendência de Catálogo
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Solicitar Catalogação</h2>
+                <p class="text-xs text-gray-500 mt-1">Demandas registradas com código SIPAC "0". Cadastre o código definitivo para enviá-las à Entrada.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterCatalogYear" onchange="window.pcaApp.renderAdminCatalog()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-200 rounded-2xl bg-gray-50/50">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-gray-100/90 sticky top-0 text-gray-500 uppercase tracking-wider text-[10px] font-black backdrop-blur-sm shadow-sm z-10">
-                  <tr><th class="p-3 border-b border-gray-200">Nome / Credenciais</th><th class="p-3 border-b border-gray-200">Setor</th><th class="p-3 border-b border-gray-200">Perfil</th><th class="p-3 border-b border-gray-200 text-center">Ações</th></tr>
-                </thead>
-                <tbody id="usersListContainer" class="divide-y divide-gray-100"></tbody>
-              </table>
+            <div id="adminCatalogContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: DEMANDAS APROVADAS NO PCA -->
+        <div id="view-admin-approved" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 text-[11px] font-bold mb-2 border border-green-200">
+                  <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Oficial
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Demandas do PCA (Aprovadas)</h2>
+                <p class="text-xs text-gray-500 mt-1">Acesso completo e detalhado aos itens que foram classificados e deferidos.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterAdminApprovedYear" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterAdminApprovedSector" onchange="window.pcaApp.renderAdminApproved()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+                <button onclick="window.pcaApp.exportPCAExcel()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl border border-gray-300 transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+                  <i data-lucide="download" class="w-4 h-4 text-autumn-secondary"></i> Exportar PCA
+                </button>
+              </div>
+            </div>
+            <div id="adminApprovedContainer" class="space-y-4"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 3.5: DEMANDAS INDEFERIDAS / NÃO CADASTRADAS -->
+        <div id="view-admin-rejected" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 text-[11px] font-bold mb-2 border border-red-200">
+                  <i data-lucide="x-octagon" class="w-3.5 h-3.5"></i> Rejeitadas
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Demandas Indeferidas ou Não Cadastradas</h2>
+                <p class="text-xs text-gray-500 mt-1">Histórico de solicitações que foram negadas ou canceladas no PCA.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRejYear" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRejSector" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRejSegment" onchange="window.pcaApp.renderAdminRejected()" class="bg-transparent px-2 py-1 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="adminRejectedContainer" class="space-y-4"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 4: POR SEGMENTO (Agrupamento SIPAC) -->
+        <div id="view-admin-segments" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[11px] font-bold mb-2 border border-purple-200">
+                  <i data-lucide="layers" class="w-3.5 h-3.5"></i> Agrupamento
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Demandas por Segmento</h2>
+                <p class="text-xs text-gray-500 mt-1">Consolide as demandas de todos os setores agrupadas pelo código SIPAC.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterSegYear" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="tags" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterSegGroup" onchange="window.pcaApp.renderAdminSegments()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="adminSegmentsContainer" class="space-y-4"></div>
+          </div>
+        </div>
+
+        <!-- VIEW: OUTROS ENCAMINHAMENTOS -->
+        <div id="view-admin-routings" class="space-y-6 hidden">
+          <div class="print-only-header text-center mb-8 border-b-2 border-slate-800 pb-4 hidden print:block">
+              <h1 class="text-2xl font-black uppercase tracking-wider text-slate-900">Relatório: Outros Encaminhamentos</h1>
+              <p id="pdf-timestamp-routing" class="text-xs text-slate-600 mt-1 font-bold"></p>
+          </div>
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm no-print">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold mb-2 border border-blue-200">
+                  <i data-lucide="forward" class="w-3.5 h-3.5"></i> Redirecionadas
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Outros Encaminhamentos</h2>
+                <p class="text-xs text-gray-500 mt-1">Lista de demandas que não entrarão no PCA (Ex: Terceirizados, Móveis Padronizados).</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRoutYear" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRoutSector" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="list-tree" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterRoutType" onchange="window.pcaApp.renderAdminRoutings()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none w-full cursor-pointer">
+                    <option value="all">Todos os Tipos</option>
+                    <option value="É Item da lista dos postos Terceirizados">Postos Terceirizados</option>
+                    <option value="É Item da lista de Móveis Padronizados">Móveis Padronizados</option>
+                    <option value="É Item da lista de Materiais de Expediente Padronizados">Mat. Expediente Padronizados</option>
+                    <option value="É Item da lista de TIC">Itens de TIC</option>
+                  </select>
+                </div>
+                <button onclick="window.pcaApp.printRoutingReport()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm border border-gray-300 flex items-center gap-1.5">
+                  <i data-lucide="printer" class="w-4 h-4 text-gray-500"></i> Relatório PDF
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="adminRoutingsContainer" class="space-y-4"></div>
+        </div>
+
+        <!-- VIEW 5: ACOMPANHAMENTO E STATUS (Execução) -->
+        <div id="view-admin-tracking" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-gray-200 pb-5">
+              <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold mb-2 border border-amber-200">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Acompanhamento
+                </div>
+                <h2 class="text-2xl font-black text-autumn-primary">Gerenciar Status de Execução</h2>
+                <p class="text-xs text-gray-500 mt-1">Filtre por ano e setor para atualizar a situação do processo licitatório/compra.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterTrackYear" onchange="window.pcaApp.renderAdminTracking()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-2 py-1 shadow-inner">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-autumn-secondary ml-1"></i>
+                  <select id="filterTrackSector" onchange="window.pcaApp.renderAdminTracking()" class="bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 outline-none cursor-pointer">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="adminTrackingContainer" class="space-y-4"></div>
+          </div>
+        </div>
+
+        <!-- VIEW 6: CONFIGURAÇÕES (ADMIN) -->
+        <div id="view-admin-settings" class="space-y-6 hidden">
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2">
+                  <i data-lucide="calendar-check" class="w-5 h-5 text-autumn-secondary"></i> Ano PCA Vigente
+                </h2>
+                <p class="text-[11px] text-gray-500 mt-1">Ao salvar o ano base atual, todas as abas e indicadores do sistema passam a exibir os dados deste ano automaticamente.</p>
+              </div>
+              <div class="flex items-center gap-3 w-full sm:w-auto">
+                <select id="settingActiveYear" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-sm font-black text-autumn-primary bg-gray-50 cursor-pointer"></select>
+                <button onclick="window.pcaApp.saveActiveYear()" class="bg-autumn-primary text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex items-center gap-2 shadow-sm">
+                  <i data-lucide="save" class="w-4 h-4"></i> Salvar Parâmetro
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD: LIMITES ORÇAMENTÁRIOS POR SETOR E ANO -->
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm space-y-5">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-4">
+              <div>
+                <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2">
+                  <i data-lucide="wallet" class="w-5 h-5 text-autumn-secondary"></i> Limites Orçamentários por Setor (Teto de Gastos)
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">Estipule o limite financeiro anual de cada setor. O demandante verá uma barra regressiva conforme lança pedidos.</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div class="flex items-center bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 shadow-inner">
+                  <i data-lucide="calendar" class="w-4 h-4 text-autumn-secondary mr-2"></i>
+                  <select id="settingBudgetYear" onchange="window.pcaApp.renderBudgetSettings()" class="bg-transparent text-xs font-black text-autumn-primary outline-none cursor-pointer"></select>
+                </div>
+                <input type="text" id="searchBudgetSectorInput" oninput="window.pcaApp.renderBudgetSettings()" placeholder="Filtrar setor..." class="px-3 py-2 rounded-xl border border-gray-300 text-xs focus:ring-2 focus:ring-autumn-secondary outline-none">
+                <button onclick="window.pcaApp.saveAllBudgets()" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                  <i data-lucide="save" class="w-4 h-4"></i> Salvar Todos os Limites
+                </button>
+              </div>
+            </div>
+
+            <div id="budgetSettingsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[420px] overflow-y-auto custom-scrollbar pr-1">
+              <!-- Injetado via JS -->
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col lg:flex-row gap-6">
+            <div class="w-full lg:w-1/3 space-y-4 border-b lg:border-b-0 lg:border-r border-gray-100 pb-6 lg:pb-0 lg:pr-6">
+              <div class="border-b border-gray-200 pb-3 flex justify-between items-start mb-4">
+                <div>
+                  <h2 id="userFormTitle" class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5 text-autumn-secondary"></i> Cadastrar Usuário</h2>
+                </div>
+                <button type="button" id="cancelUserEditBtn" onclick="window.pcaApp.cancelEditUser()" class="hidden text-[10px] text-gray-600 hover:text-gray-900 font-bold px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg transition border border-gray-300">Cancelar</button>
+              </div>
+              <form id="newUserForm" onsubmit="window.pcaApp.handleCreateUser(event)" class="space-y-3">
+                <input type="hidden" id="editUserId">
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">Nome Completo:</label>
+                  <input type="text" id="newUserName" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">CPF:</label>
+                  <input type="text" id="newUserCpf" required maxlength="14" oninput="window.pcaApp.maskCPF(this)" placeholder="000.000.000-00" class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">SIAPE (Login):</label>
+                  <input type="text" id="newUserLogin" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Setor:</label>
+                      <select id="newUserSector" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer"></select>
+                    </div>
+                    <div>
+                      <label class="block font-bold text-gray-700 mb-1 text-xs">Perfil:</label>
+                      <select id="newUserRole" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs cursor-pointer">
+                          <option value="solicitante">Solicitante</option>
+                          <option value="admin">Administrador</option>
+                      </select>
+                    </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700 mb-1 text-xs">Senha Inicial:</label>
+                  <div class="flex gap-2">
+                    <input type="text" id="newUserPassword" required class="w-full px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs font-mono font-bold text-autumn-primary">
+                    <button type="button" onclick="window.pcaApp.generateRandomPassword()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-xl text-xs font-bold transition border border-gray-200 shadow-sm">Gerar</button>
+                  </div>
+                </div>
+                <button type="submit" class="w-full bg-autumn-primary text-white px-3 py-3 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition flex justify-center items-center gap-2 mt-2 shadow-sm"><i data-lucide="check" class="w-4 h-4"></i> Salvar Acesso</button>
+              </form>
+            </div>
+            
+            <div class="w-full lg:w-2/3 flex flex-col h-[400px]">
+              <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-3 gap-2">
+                <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2 whitespace-nowrap"><i data-lucide="users" class="w-5 h-5 text-autumn-secondary"></i> Usuários da Plataforma</h2>
+                <div class="flex items-center gap-2 w-full justify-end">
+                  <input type="text" id="searchUsersInput" oninput="window.pcaApp.filterUsersList(this.value)" placeholder="Buscar SIAPE ou Nome..." class="w-full max-w-[200px] px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-autumn-secondary outline-none">
+                  <span id="userCountBadge" class="bg-gray-100 border border-gray-200 text-gray-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider whitespace-nowrap">0 cadastrados</span>
+                </div>
+              </div>
+              <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-200 rounded-2xl bg-gray-50/50">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-gray-100/90 sticky top-0 text-gray-500 uppercase tracking-wider text-[10px] font-black backdrop-blur-sm shadow-sm z-10">
+                    <tr><th class="p-3 border-b border-gray-200">Nome / Credenciais</th><th class="p-3 border-b border-gray-200">Setor</th><th class="p-3 border-b border-gray-200">Perfil</th><th class="p-3 border-b border-gray-200 text-center">Ações</th></tr>
+                  </thead>
+                  <tbody id="usersListContainer" class="divide-y divide-gray-100"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
+              <div class="border-b border-gray-200 pb-4 mb-4">
+                <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-autumn-secondary"></i> Setores Requisitantes</h2>
+              </div>
+              <form onsubmit="window.pcaApp.addSector(event)" class="flex gap-2 mb-4">
+                <input type="text" id="newSectorInput" required oninput="window.pcaApp.filterSectorsList(this.value)" placeholder="Novo setor ou buscar existente..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+                <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              </form>
+              <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
+                <ul id="sectorsList" class="space-y-2 text-xs"></ul>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
+              <div class="border-b border-gray-200 pb-4 mb-4">
+                <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="tags" class="w-5 h-5 text-autumn-secondary"></i> Segmentos de Contratação</h2>
+              </div>
+              <form onsubmit="window.pcaApp.addSegment(event)" class="flex gap-2 mb-4">
+                <input type="text" id="newSegmentInput" required oninput="window.pcaApp.filterSegmentsList(this.value)" placeholder="Novo segmento ou buscar existente..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
+                <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
+              </form>
+              <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
+                <ul id="segmentsList" class="space-y-2 text-xs"></ul>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
-            <div class="border-b border-gray-200 pb-4 mb-4">
-              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-autumn-secondary"></i> Setores Requisitantes</h2>
-            </div>
-            <form onsubmit="window.pcaApp.addSector(event)" class="flex gap-2 mb-4">
-              <input type="text" id="newSectorInput" required oninput="window.pcaApp.filterSectorsList(this.value)" placeholder="Novo setor ou buscar existente..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
-              <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
-            </form>
-            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
-              <ul id="sectorsList" class="space-y-2 text-xs"></ul>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-[500px]">
-            <div class="border-b border-gray-200 pb-4 mb-4">
-              <h2 class="text-lg font-black text-autumn-primary flex items-center gap-2"><i data-lucide="tags" class="w-5 h-5 text-autumn-secondary"></i> Segmentos de Contratação</h2>
-            </div>
-            <form onsubmit="window.pcaApp.addSegment(event)" class="flex gap-2 mb-4">
-              <input type="text" id="newSegmentInput" required oninput="window.pcaApp.filterSegmentsList(this.value)" placeholder="Novo segmento ou buscar existente..." class="flex-1 px-3 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none text-xs">
-              <button type="submit" class="bg-autumn-primary text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-autumn-primaryHover transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
-            </form>
-            <div class="flex-1 overflow-y-auto custom-scrollbar border border-gray-100 rounded-xl p-2 bg-gray-50">
-              <ul id="segmentsList" class="space-y-2 text-xs"></ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </main>
+      </main>
+    </div>
   </div>
 
   <!-- MODAL DE CLASSIFICAÇÃO ADMIN (FILTROS) -->
@@ -875,6 +967,7 @@
         <div>
            <div class="flex items-center gap-2 mb-2">
              <span id="vdYear" class="font-mono text-xs font-black px-2 py-0.5 rounded border bg-gray-100 text-gray-800">...</span>
+             <span id="vdId" class="font-mono text-xs font-black px-2 py-0.5 rounded border bg-autumn-primary/10 text-autumn-primary">...</span>
            </div>
            <h3 id="vdTitle" class="text-xl font-black text-autumn-primary leading-tight">...</h3>
         </div>
@@ -961,6 +1054,18 @@
         "Aquisição de materiais de expediente", "Aquisição de mobiliário padrão", "Aquisição de itens de TIC"
       ];
 
+      const ALL_YEAR_FILTERS = [
+        'filterMyYear',
+        'filterAdminInboxYear',
+        'filterCatalogYear',
+        'filterAdminApprovedYear',
+        'filterRejYear',
+        'filterSegYear',
+        'filterDashYear',
+        'filterRoutYear',
+        'filterTrackYear'
+      ];
+
       function loadStorage(key, fallback) {
         try { const i = localStorage.getItem(key); if (i) return JSON.parse(i); } catch (e) {} return fallback;
       }
@@ -1012,6 +1117,7 @@
         users: loadStorage('pca_users', [...DEFAULT_USERS]), 
         sectors: loadStorage('pca_sectors', DEFAULT_SECTORS).sort((a,b) => a.localeCompare(b)),
         segments: loadStorage('pca_segments', DEFAULT_SEGMENTS).sort((a,b) => a.localeCompare(b)),
+        budgets: loadStorage('pca_budgets', {}),
         demands: loadStorage('pca_demands', [])
       };
 
@@ -1032,6 +1138,7 @@
           lucide.createIcons();
           this.checkAccessGate(); 
           if(state.currentUser) {
+            this.syncAllYearFiltersToActive();
             this.navigate(state.currentUser.role === 'admin' ? 'admin-dashboard' : 'form-demand');
           }
           this.setMinimumDate();
@@ -1063,19 +1170,7 @@
                     s.forEach(d=>state.demands.push(d.data())); 
                     state.demands.sort((a,b)=>new Date(b.dateStamp)-new Date(a.dateStamp)); 
                     pcaApp.persistData(); 
-                    if(state.currentView === 'my-demands') pcaApp.renderMyDemands();
-                    if(state.currentView === 'admin-inbox') pcaApp.renderAdminInbox();
-                    if(state.currentView === 'admin-catalog') pcaApp.renderAdminCatalog();
-                    if(state.currentView === 'admin-approved') pcaApp.renderAdminApproved();
-                    if(state.currentView === 'admin-rejected') pcaApp.renderAdminRejected();
-                    if(state.currentView === 'admin-segments') pcaApp.renderAdminSegments();
-                    if(state.currentView === 'admin-routings') pcaApp.renderAdminRoutings();
-                    if(state.currentView === 'admin-tracking') pcaApp.renderAdminTracking();
-                    if(state.currentView === 'admin-dashboard') pcaApp.updateAdminDashboard();
-                    if(state.currentView === 'search-results') {
-                         const q = document.getElementById('globalSearchInput').value;
-                         if(q) pcaApp.renderSearchResults(q.trim().toLowerCase());
-                    }
+                    pcaApp.refreshCurrentView();
                 } 
             });
 
@@ -1098,13 +1193,31 @@
 
             onSnapshot(collection(db,'pca_meta'), s=>{
                 if(!s.empty) {
+                    let yearChangedFromCloud = false;
                     s.forEach(d => {
                         if(d.id === 'sectors') state.sectors = (d.data().list || DEFAULT_SECTORS).sort((a,b) => a.localeCompare(b));
                         if(d.id === 'segments') state.segments = (d.data().list || DEFAULT_SEGMENTS).sort((a,b) => a.localeCompare(b));
+                        if(d.id === 'budgets') state.budgets = d.data().list || {};
+                        if(d.id === 'config' && d.data().list) {
+                            const cfg = d.data().list;
+                            if (cfg.activeYearPCA && cfg.activeYearPCA !== state.activeYearPCA) {
+                                state.activeYearPCA = cfg.activeYearPCA;
+                                yearChangedFromCloud = true;
+                            }
+                            if (typeof cfg.isWindowOpen === 'boolean') {
+                                state.isWindowOpen = cfg.isWindowOpen;
+                            }
+                        }
                     });
                     pcaApp.persistData();
                     pcaApp.populateSelects();
-                    if(state.currentView === 'admin-settings') pcaApp.renderSettings();
+                    if (yearChangedFromCloud) {
+                        pcaApp.syncAllYearFiltersToActive();
+                        pcaApp.setMinimumDate();
+                    }
+                    pcaApp.checkFormLock();
+                    pcaApp.renderDynamicNav();
+                    pcaApp.refreshCurrentView();
                 }
             });
 
@@ -1115,6 +1228,47 @@
               console.error("Firebase error", e);
               pcaApp.showToast('Rodando em modo Offline.', 'alert');
           }
+        },
+
+        // Sincroniza todos os seletores de ano do sistema para o Ano PCA Vigente
+        syncAllYearFiltersToActive() {
+            const activeY = state.activeYearPCA;
+            ALL_YEAR_FILTERS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = activeY;
+            });
+            const setYear = document.getElementById('settingActiveYear');
+            if (setYear) setYear.value = activeY;
+
+            const setBudgetYear = document.getElementById('settingBudgetYear');
+            if (setBudgetYear) setBudgetYear.value = activeY;
+
+            const demYear = document.getElementById('demYearPCA');
+            if (demYear) demYear.value = activeY;
+
+            const headerBadge = document.getElementById('headerActiveYearBadge');
+            if (headerBadge) headerBadge.textContent = activeY;
+
+            const sidebarPill = document.getElementById('sidebarYearPill');
+            if (sidebarPill) sidebarPill.textContent = activeY;
+        },
+
+        refreshCurrentView() {
+            if(state.currentView === 'form-demand') this.renderSectorBudgetBars();
+            if(state.currentView === 'my-demands') this.renderMyDemands();
+            if(state.currentView === 'admin-inbox') this.renderAdminInbox();
+            if(state.currentView === 'admin-catalog') this.renderAdminCatalog();
+            if(state.currentView === 'admin-approved') this.renderAdminApproved();
+            if(state.currentView === 'admin-rejected') this.renderAdminRejected();
+            if(state.currentView === 'admin-segments') this.renderAdminSegments();
+            if(state.currentView === 'admin-routings') this.renderAdminRoutings();
+            if(state.currentView === 'admin-tracking') this.renderAdminTracking();
+            if(state.currentView === 'admin-dashboard') this.updateAdminDashboard();
+            if(state.currentView === 'admin-settings') this.renderSettings();
+            if(state.currentView === 'search-results') {
+                const q = document.getElementById('globalSearchInput')?.value;
+                if(q) this.renderSearchResults(q.trim().toLowerCase());
+            }
         },
 
         autoFillDemandForm() {
@@ -1140,6 +1294,241 @@
                     sectorEl.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
                 }
             }
+            this.renderSectorBudgetBars();
+        },
+
+        // ========================================================
+        // LÓGICA DE ORÇAMENTO E BARRA REGRESSIVA DO DEMANDANTE
+        // ========================================================
+        getSectorBudgetLimit(year, sector) {
+            if (!year || !sector) return 0;
+            return (state.budgets[year] && Number(state.budgets[year][sector])) ? Number(state.budgets[year][sector]) : 0;
+        },
+
+        getSectorSpentAmount(year, sector) {
+            if (!year || !sector) return 0;
+            return state.demands
+                .filter(d => d.yearPCA === year && d.sector === sector && !d.statusPCA.includes('Indeferido') && !d.statusPCA.includes('Não Cadastrar') && d.statusPCA !== 'Outro Encaminhamento')
+                .reduce((acc, d) => acc + (Number(d.total) || 0), 0);
+        },
+
+        renderSectorBudgetBars() {
+            const userSector = (state.currentUser && state.currentUser.role !== 'admin')
+                ? state.currentUser.sector
+                : (document.getElementById('demSector')?.value || state.currentUser?.sector || '');
+
+            const cardForm = document.getElementById('requesterBudgetCardForm');
+            if (cardForm) {
+                const yearForm = state.activeYearPCA;
+                const qty = parseInt(document.getElementById('demQty')?.value) || 0;
+                const price = this.parseMoney(document.getElementById('demPrice')?.value) || 0;
+                const typingAmount = qty * price;
+                cardForm.innerHTML = this.buildBudgetBarHTML(yearForm, userSector, typingAmount, true);
+            }
+
+            const cardMy = document.getElementById('requesterBudgetCardMyDemands');
+            if (cardMy) {
+                const filterY = document.getElementById('filterMyYear')?.value;
+                const yearMy = (filterY && filterY !== 'all') ? filterY : state.activeYearPCA;
+                cardMy.innerHTML = this.buildBudgetBarHTML(yearMy, userSector, 0, false);
+            }
+            lucide.createIcons();
+        },
+
+        buildBudgetBarHTML(year, sector, currentTypingAmount = 0, isFormView = false) {
+            if (!sector) {
+                return `
+                  <div class="flex items-center justify-between text-xs text-gray-500">
+                    <span class="font-bold flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4 text-autumn-secondary"></i> Controle Orçamentário do Setor (${year})</span>
+                    <span>Selecione um setor para visualizar o limite de gastos.</span>
+                  </div>`;
+            }
+
+            const limit = this.getSectorBudgetLimit(year, sector);
+            const alreadySpent = this.getSectorSpentAmount(year, sector);
+            const projectedSpent = alreadySpent + currentTypingAmount;
+            const remaining = limit - projectedSpent;
+
+            if (limit <= 0) {
+                return `
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-autumn-primary/10 text-autumn-primary text-[10px] font-black uppercase">${year} • ${sector}</span>
+                        <span class="text-xs font-bold text-gray-500">Sem teto orçamentário estipulado pelo Admin para ${year}</span>
+                      </div>
+                      <p class="text-[11px] text-gray-400 mt-1">Total já demandado pelo setor em ${year}: <strong class="text-gray-700">R$ ${fmtMoney(alreadySpent)}</strong></p>
+                    </div>
+                  </div>`;
+            }
+
+            const remainingPctRaw = ((limit - projectedSpent) / limit) * 100;
+            const remainingPctBar = Math.max(0, Math.min(100, remainingPctRaw));
+            const spentPct = (projectedSpent / limit) * 100;
+
+            let barColor = 'bg-emerald-500';
+            let badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+            let statusText = 'Saldo Confortável';
+
+            if (remaining < 0) {
+                barColor = 'bg-red-600';
+                badgeColor = 'bg-red-100 text-red-800 border-red-300';
+                statusText = 'Limite Ultrapassado!';
+            } else if (remainingPctBar <= 15) {
+                barColor = 'bg-red-500';
+                badgeColor = 'bg-red-50 text-red-700 border-red-200';
+                statusText = 'Saldo Crítico';
+            } else if (remainingPctBar <= 40) {
+                barColor = 'bg-amber-500';
+                badgeColor = 'bg-amber-50 text-amber-800 border-amber-200';
+                statusText = 'Atenção ao Saldo';
+            }
+
+            return `
+              <div class="space-y-4">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-2 border-b border-gray-100 pb-3">
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="inline-flex items-center gap-1 text-xs font-black text-autumn-primary uppercase tracking-wide">
+                        <i data-lucide="wallet" class="w-4 h-4 text-autumn-secondary"></i> Teto Orçamentário do Setor (${sector} • ${year})
+                      </span>
+                      <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border uppercase ${badgeColor}">${statusText}</span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 mt-0.5">A barra abaixo regride conforme as demandas do seu setor são lançadas no ${year}.</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase block">Saldo Disponível Restante</span>
+                    <span class="text-xl font-black ${remaining < 0 ? 'text-red-600' : 'text-emerald-700'}">
+                      ${remaining < 0 ? '- R$ ' + fmtMoney(Math.abs(remaining)) : 'R$ ' + fmtMoney(remaining)}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Barra Regressiva -->
+                <div class="space-y-1.5">
+                  <div class="flex justify-between text-[11px] font-bold">
+                    <span class="text-gray-600">Disponível: <strong class="${remaining < 0 ? 'text-red-600' : 'text-emerald-700'}">${remainingPctRaw.toFixed(1)}%</strong> do limite</span>
+                    <span class="text-gray-500">Utilizado: <strong>${spentPct.toFixed(1)}%</strong></span>
+                  </div>
+                  <div class="w-full h-4 bg-gray-200 rounded-full overflow-hidden shadow-inner p-0.5">
+                    <div class="h-full ${barColor} rounded-full transition-all duration-500" style="width: ${remainingPctBar}%"></div>
+                  </div>
+                </div>
+
+                <!-- Resumo Numérico -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                  <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">Limite Estipulado</span>
+                    <span class="text-xs font-black text-gray-800">R$ ${fmtMoney(limit)}</span>
+                  </div>
+                  <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">Já Lançado (${year})</span>
+                    <span class="text-xs font-black text-autumn-secondary">R$ ${fmtMoney(alreadySpent)}</span>
+                  </div>
+                  <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase">${isFormView ? 'Simulação (Preenchimento Atual)' : 'Saldo Livre'}</span>
+                    <span class="text-xs font-black ${isFormView && currentTypingAmount > 0 ? 'text-blue-600' : 'text-gray-800'}">
+                      R$ ${fmtMoney(isFormView ? currentTypingAmount : Math.max(0, remaining))}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            `;
+        },
+
+        renderBudgetSettings() {
+            const cont = document.getElementById('budgetSettingsContainer');
+            const yearEl = document.getElementById('settingBudgetYear');
+            if (!cont || !yearEl) return;
+
+            const selectedYear = yearEl.value || state.activeYearPCA;
+            const searchQ = (document.getElementById('searchBudgetSectorInput')?.value || '').trim().toLowerCase();
+
+            let sectorsList = [...state.sectors];
+            if (searchQ) {
+                sectorsList = sectorsList.filter(s => s.toLowerCase().includes(searchQ));
+            }
+
+            if (sectorsList.length === 0) {
+                cont.innerHTML = `<div class="col-span-full text-center py-6 text-xs text-gray-400 font-bold">Nenhum setor encontrado.</div>`;
+                return;
+            }
+
+            let html = '';
+            sectorsList.forEach(sec => {
+                const limitVal = this.getSectorBudgetLimit(selectedYear, sec);
+                const spentVal = this.getSectorSpentAmount(selectedYear, sec);
+                const formattedLimit = limitVal > 0 ? fmtMoney(limitVal) : '';
+
+                html += `
+                  <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between gap-3 hover:border-autumn-secondary/50 transition shadow-sm">
+                    <div class="flex justify-between items-start gap-2">
+                      <div>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase block">${selectedYear}</span>
+                        <h4 class="text-sm font-black text-autumn-primary uppercase">${sec}</h4>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-[9px] font-bold text-gray-400 uppercase block">Já Demandado</span>
+                        <span class="text-xs font-bold text-autumn-secondary">R$ ${fmtMoney(spentVal)}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-gray-600 uppercase mb-1">Limite de Gastos (R$)</label>
+                      <div class="flex items-center gap-2">
+                        <div class="relative flex-1">
+                          <span class="absolute left-3 top-2 text-xs font-black text-gray-400">R$</span>
+                          <input type="text" data-sector="${sec}" value="${formattedLimit}" oninput="window.pcaApp.formatMoneyInputSimple(this)" placeholder="0,00 (Sem limite)" class="budget-sector-input w-full pl-8 pr-3 py-1.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-autumn-secondary outline-none bg-white text-xs font-black text-gray-800 text-right">
+                        </div>
+                        <button type="button" onclick="window.pcaApp.saveSingleBudget('${sec}')" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white p-2 rounded-xl transition shadow-sm" title="Salvar limite deste setor">
+                          <i data-lucide="check" class="w-4 h-4"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+            });
+            cont.innerHTML = html;
+            lucide.createIcons();
+        },
+
+        formatMoneyInputSimple(i) {
+            let v = i.value.replace(/\D/g,'');
+            if(v === '') { i.value = ''; return; }
+            v = (parseFloat(v)/100).toFixed(2) + '';
+            v = v.replace(".", ",");
+            v = v.replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,");
+            v = v.replace(/(\d)(\d{3}),/g, "$1.$2,");
+            i.value = v;
+        },
+
+        saveSingleBudget(sector) {
+            const year = document.getElementById('settingBudgetYear').value || state.activeYearPCA;
+            const input = document.querySelector(`.budget-sector-input[data-sector="${sector}"]`);
+            if (!input) return;
+
+            const val = this.parseMoney(input.value) || 0;
+            if (!state.budgets[year]) state.budgets[year] = {};
+            state.budgets[year][sector] = val;
+
+            this.persistData();
+            if (window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('budgets', state.budgets);
+            this.showToast(`Limite do setor ${sector} (${year}) salvo!`, 'success');
+        },
+
+        saveAllBudgets() {
+            const year = document.getElementById('settingBudgetYear').value || state.activeYearPCA;
+            if (!state.budgets[year]) state.budgets[year] = {};
+
+            const inputs = document.querySelectorAll('.budget-sector-input');
+            inputs.forEach(inp => {
+                const sec = inp.getAttribute('data-sector');
+                const val = this.parseMoney(inp.value) || 0;
+                if (sec) state.budgets[year][sec] = val;
+            });
+
+            this.persistData();
+            if (window.cloudSyncInstance) window.cloudSyncInstance.saveMeta('budgets', state.budgets);
+            this.showToast(`Todos os limites de ${year} foram salvos!`, 'success');
         },
         
         checkSipacMemory(code) {
@@ -1214,6 +1603,12 @@
         toggleWindow() {
             state.isWindowOpen = !state.isWindowOpen;
             this.persistData();
+            if (window.cloudSyncInstance) {
+                window.cloudSyncInstance.saveMeta('config', {
+                    activeYearPCA: state.activeYearPCA,
+                    isWindowOpen: state.isWindowOpen
+                });
+            }
             this.renderDynamicNav();
             this.checkFormLock();
             this.showToast(state.isWindowOpen ? 'Janela do PCA ABERTA para envios.' : 'Janela do PCA FECHADA.', state.isWindowOpen ? 'success' : 'alert');
@@ -1286,7 +1681,7 @@
             if(gate) gate.classList.remove('hidden'); if(wrap) wrap.classList.add('hidden');
           } else {
             if(gate) gate.classList.add('hidden'); if(wrap) wrap.classList.remove('hidden');
-            this.updateHeaderProfile(); this.renderDynamicNav(); this.populateSelects(); this.checkFormLock();
+            this.updateHeaderProfile(); this.populateSelects(); this.renderDynamicNav(); this.checkFormLock();
           }
         },
         
@@ -1299,12 +1694,24 @@
             sessionStorage.setItem('pca_active_user_id', found.id); 
             if(errMsg) errMsg.classList.add('hidden'); 
             this.checkAccessGate(); 
+            this.syncAllYearFiltersToActive();
             this.navigate(found.role === 'admin' ? 'admin-dashboard' : 'form-demand'); 
             this.showToast(`Bem-vindo(a), ${found.name}!`, 'success');
           } else { if(errMsg) errMsg.classList.remove('hidden'); }
         },
         
         logout() {
+          if (state.currentView === 'form-demand') {
+              const codeVal = document.getElementById('demCode') ? document.getElementById('demCode').value : '';
+              const titleVal = document.getElementById('demTitle') ? document.getElementById('demTitle').value : '';
+              if (codeVal || titleVal) {
+                  const querSair = confirm("Atenção: Tem informações preenchidas no formulário que não foram enviadas e serão perdidas ao sair. Deseja realmente encerrar a sessão?");
+                  if (!querSair) return;
+              }
+          }
+          const form = document.getElementById('pcaDemandForm');
+          if (form) form.reset();
+
           state.currentUser = null; 
           sessionStorage.removeItem('pca_active_user_id'); 
           document.getElementById('gateUser').value=''; document.getElementById('gatePass').value='';
@@ -1315,6 +1722,7 @@
           saveStorage('pca_users', state.users);
           saveStorage('pca_sectors', state.sectors); 
           saveStorage('pca_segments', state.segments); 
+          saveStorage('pca_budgets', state.budgets);
           saveStorage('pca_demands', state.demands); 
           saveStorage('pca_active_year', state.activeYearPCA);
           saveStorage('pca_window_open', state.isWindowOpen); 
@@ -1322,6 +1730,17 @@
         
         navigate(viewId) {
           if (!state.currentUser) return this.checkAccessGate();
+
+          if (state.currentView === 'form-demand' && viewId !== 'form-demand') {
+              const codeVal = document.getElementById('demCode') ? document.getElementById('demCode').value : '';
+              const titleVal = document.getElementById('demTitle') ? document.getElementById('demTitle').value : '';
+              
+              if (codeVal || titleVal) {
+                  const querSair = confirm("Atenção: Você tem informações preenchidas que não foram enviadas. Deseja realmente sair e descartar esses dados?");
+                  if (!querSair) return;
+              }
+          }
+
           state.currentView = viewId;
           
           const allViews = [
@@ -1333,7 +1752,26 @@
             const el = document.getElementById(id); if (el) el.classList.add('hidden');
           });
           const act = document.getElementById(`view-${viewId}`); if (act) act.classList.remove('hidden');
+
+          // Garante que ao entrar em qualquer aba, o filtro de ano acompanhe o Ano PCA Vigente
+          this.syncAllYearFiltersToActive();
           
+          if (viewId === 'form-demand') {
+              const form = document.getElementById('pcaDemandForm');
+              if (form) {
+                  form.reset();
+                  document.getElementById('demYearPCA').value = state.activeYearPCA;
+                  document.getElementById('demTotalDisplay').textContent = 'R$ 0,00';
+                  const pJust = document.getElementById('demPrioJust');
+                  if (pJust) {
+                      pJust.disabled = true; pJust.required = false; pJust.value = "";
+                      pJust.classList.add('bg-gray-100', 'text-gray-500'); pJust.classList.remove('bg-white', 'text-gray-900');
+                      pJust.placeholder = "Só preencher se a prioridade for Alta.";
+                  }
+                  this.lastAutoFilledCode = '';
+              }
+          }
+
           if (viewId === 'my-demands') this.renderMyDemands();
           if (viewId === 'admin-inbox') this.renderAdminInbox();
           if (viewId === 'admin-catalog') this.renderAdminCatalog();
@@ -1356,35 +1794,37 @@
           if (!nav || !state.currentUser) return;
           
           let h = '';
-          const aC = 'bg-autumn-primaryHover text-white shadow-inner font-bold rounded-xl';
+          const aC = 'bg-autumn-secondary text-white shadow-md font-bold rounded-xl';
           const iC = 'text-gray-200 hover:bg-autumn-primaryHover hover:text-white transition rounded-xl';
 
           if (state.currentUser.role === 'admin') {
-            h += `<button onclick="window.pcaApp.navigate('admin-dashboard')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-dashboard'?aC:iC}"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Governança</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-inbox')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-inbox'?aC:iC}"><i data-lucide="inbox" class="w-4 h-4"></i> Entrada</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-catalog')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-catalog'?aC:iC}"><i data-lucide="tag" class="w-4 h-4"></i> Catalogação</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-approved')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-approved'?aC:iC}"><i data-lucide="check-square" class="w-4 h-4"></i> Oficial PCA</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-rejected')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-rejected'?aC:iC}"><i data-lucide="x-octagon" class="w-4 h-4"></i> Rejeitadas</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-segments')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-segments'?aC:iC}"><i data-lucide="layers" class="w-4 h-4"></i> Por Segmento</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-routings')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-routings'?aC:iC}"><i data-lucide="forward" class="w-4 h-4"></i> Redirecionadas</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-tracking')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-tracking'?aC:iC}"><i data-lucide="trending-up" class="w-4 h-4"></i> Status Execução</button>`;
-            h += `<button onclick="window.pcaApp.navigate('admin-settings')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='admin-settings'?aC:iC}"><i data-lucide="settings" class="w-4 h-4"></i> Admin</button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-dashboard')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-dashboard'?aC:iC}"><i data-lucide="bar-chart-2" class="w-4 h-4 flex-shrink-0"></i> <span>Governança</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-inbox')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-inbox'?aC:iC}"><i data-lucide="inbox" class="w-4 h-4 flex-shrink-0"></i> <span>Entrada</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-catalog')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-catalog'?aC:iC}"><i data-lucide="tag" class="w-4 h-4 flex-shrink-0"></i> <span>Catalogação</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-approved')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-approved'?aC:iC}"><i data-lucide="check-square" class="w-4 h-4 flex-shrink-0"></i> <span>Oficial PCA</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-rejected')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-rejected'?aC:iC}"><i data-lucide="x-octagon" class="w-4 h-4 flex-shrink-0"></i> <span>Rejeitadas</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-segments')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-segments'?aC:iC}"><i data-lucide="layers" class="w-4 h-4 flex-shrink-0"></i> <span>Por Segmento</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-routings')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-routings'?aC:iC}"><i data-lucide="forward" class="w-4 h-4 flex-shrink-0"></i> <span>Redirecionadas</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-tracking')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-tracking'?aC:iC}"><i data-lucide="trending-up" class="w-4 h-4 flex-shrink-0"></i> <span>Status Execução</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('admin-settings')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='admin-settings'?aC:iC}"><i data-lucide="settings" class="w-4 h-4 flex-shrink-0"></i> <span>Admin</span></button>`;
             
             const isOpen = state.isWindowOpen;
             toggleArea.innerHTML = `
-                <div class="flex items-center gap-2.5 bg-black/20 px-3 py-1.5 rounded-xl border ${isOpen ? 'border-green-400/30' : 'border-red-400/30'}">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-200"><i data-lucide="calendar-clock" class="w-3.5 h-3.5 inline mr-1"></i>Janela PCA</span>
-                    <button onclick="window.pcaApp.toggleWindow()" class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${isOpen ? 'bg-green-500' : 'bg-red-500'}" title="Clique para abrir ou fechar o recebimento de demandas">
-                        <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${isOpen ? 'translate-x-4' : 'translate-x-1'} shadow-sm"></span>
-                    </button>
-                    <span class="text-[10px] font-black ${isOpen ? 'text-green-300' : 'text-red-300'} w-12 text-center">${isOpen ? 'ABERTA' : 'FECHADA'}</span>
+                <div class="flex items-center justify-between gap-2 bg-black/25 px-3.5 py-2.5 rounded-xl border ${isOpen ? 'border-green-400/30' : 'border-red-400/30'}">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-200 flex items-center gap-1.5"><i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>Janela PCA</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.pcaApp.toggleWindow()" class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${isOpen ? 'bg-green-500' : 'bg-red-500'}" title="Clique para abrir ou fechar o recebimento de demandas">
+                            <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${isOpen ? 'translate-x-4' : 'translate-x-1'} shadow-sm"></span>
+                        </button>
+                        <span class="text-[10px] font-black ${isOpen ? 'text-green-300' : 'text-red-300'} w-12 text-right">${isOpen ? 'ABERTA' : 'FECHADA'}</span>
+                    </div>
                 </div>
             `;
             toggleArea.classList.remove('hidden');
 
           } else {
-            h += `<button onclick="window.pcaApp.navigate('form-demand')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='form-demand'?aC:iC}"><i data-lucide="file-plus" class="w-4 h-4"></i> Lançar Demanda</button>`;
-            h += `<button onclick="window.pcaApp.navigate('my-demands')" class="px-4 py-2 text-xs flex items-center gap-1.5 ${state.currentView==='my-demands'?aC:iC}"><i data-lucide="list" class="w-4 h-4"></i> Minhas Demandas</button>`;
+            h += `<button onclick="window.pcaApp.navigate('form-demand')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='form-demand'?aC:iC}"><i data-lucide="file-plus" class="w-4 h-4 flex-shrink-0"></i> <span>Lançar Demanda</span></button>`;
+            h += `<button onclick="window.pcaApp.navigate('my-demands')" class="w-full px-3.5 py-2.5 text-xs flex items-center gap-2.5 text-left ${state.currentView==='my-demands'?aC:iC}"><i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> <span>Minhas Demandas</span></button>`;
             
             toggleArea.innerHTML = '';
             toggleArea.classList.add('hidden');
@@ -1418,10 +1858,12 @@
 
           const years = ['PCA-2025','PCA-2026','PCA-2027','PCA-2028','PCA-2029','PCA-2030','PCA-2031','PCA-2032','PCA-2033','PCA-2034','PCA-2035'];
           
-          const filters = ['filterMyYear', 'filterAdminInboxYear', 'filterAdminApprovedYear', 'filterRejYear', 'filterSegYear', 'filterDashYear', 'filterRoutYear'];
-          filters.forEach(id => {
+          ALL_YEAR_FILTERS.forEach(id => {
               const el = document.getElementById(id);
-              if (el) el.innerHTML = '<option value="all">Todos os Anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+              if (el) {
+                  el.innerHTML = '<option value="all">Todos os Anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+                  el.value = state.activeYearPCA;
+              }
           });
 
           const setYear = document.getElementById('settingActiveYear');
@@ -1430,8 +1872,20 @@
               setYear.value = state.activeYearPCA;
           }
 
+          const setBudgetYear = document.getElementById('settingBudgetYear');
+          if(setBudgetYear) {
+              setBudgetYear.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+              setBudgetYear.value = state.activeYearPCA;
+          }
+
           const demYear = document.getElementById('demYearPCA');
           if(demYear) { demYear.value = state.activeYearPCA; }
+
+          const headerBadge = document.getElementById('headerActiveYearBadge');
+          if (headerBadge) headerBadge.textContent = state.activeYearPCA;
+
+          const sidebarPill = document.getElementById('sidebarYearPill');
+          if (sidebarPill) sidebarPill.textContent = state.activeYearPCA;
           
           this.autoFillDemandForm();
         },
@@ -1489,6 +1943,8 @@
             const terms = query.split(' ').filter(t => t.length > 0);
 
             let results = state.demands.filter(d => {
+                // Filtra pelo ano PCA vigente para manter consistência com o ano selecionado
+                if (d.yearPCA !== state.activeYearPCA) return false;
                 if (state.currentUser.role !== 'admin' && d.userId !== state.currentUser.id && d.sector !== state.currentUser.sector) {
                     return false;
                 }
@@ -1496,10 +1952,10 @@
                 return terms.every(term => searchableText.includes(term));
             });
 
-            if(sub) sub.textContent = `${results.length} resultado(s) encontrado(s) para "${query}"`;
+            if(sub) sub.textContent = `${results.length} resultado(s) encontrado(s) em ${state.activeYearPCA} para "${query}"`;
 
             if (results.length === 0) {
-                c.innerHTML = '<div class="p-10 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>Nenhum resultado exato encontrado. Tente pesquisar por palavras parciais ou pelo código SIPAC.</div>';
+                c.innerHTML = `<div class="p-10 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>Nenhum resultado encontrado em ${state.activeYearPCA}.</div>`;
                 lucide.createIcons();
                 return;
             }
@@ -1517,6 +1973,7 @@
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-autumn-secondary/20"></div>
                     <div class="pl-2">
                         <div class="flex items-center gap-2 mb-3 flex-wrap">
+                            <span class="font-mono text-[10px] font-black px-2 py-0.5 rounded border bg-gray-100 text-gray-800">${d.yearPCA}</span>
                             <span class="font-mono text-[10px] font-black px-2 py-0.5 rounded border bg-gray-100 text-gray-800">${d.id.replace('REQ-', '')}</span>
                             <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded border border-gray-200 bg-gray-50 uppercase">SIPAC: ${d.codeSIPAC}</span>
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${statusColor}">${d.statusPCA}</span>
@@ -1556,7 +2013,8 @@
         chartSegment: null,
 
         updateAdminDashboard() {
-            const filterY = document.getElementById('filterDashYear').value;
+            const dashYearEl = document.getElementById('filterDashYear');
+            const filterY = dashYearEl ? (dashYearEl.value || state.activeYearPCA) : state.activeYearPCA;
             let listD = state.demands;
             if(filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
             
@@ -1567,7 +2025,7 @@
             const totalPend = listD.filter(d => d.statusPCA === 'Pendente').reduce((acc, d) => acc + d.total, 0);
 
             document.getElementById('kpiDashTotal').textContent = `R$ ${fmtMoney(total)}`;
-            document.getElementById('kpiDashCount').textContent = `${count} demandas registradas`;
+            document.getElementById('kpiDashCount').textContent = `${count} demandas registradas (${filterY === 'all' ? 'Todos os Anos' : filterY})`;
             document.getElementById('kpiDashAprovado').textContent = `R$ ${fmtMoney(totalAprov)}`;
             document.getElementById('kpiDashAprovadoPct').textContent = `${total > 0 ? ((totalAprov/total)*100).toFixed(1) : 0}% do total planejado`;
             document.getElementById('kpiDashPendente').textContent = `R$ ${fmtMoney(totalPend)}`;
@@ -1634,7 +2092,7 @@
                 const topSecs = Object.keys(seg.sectors).map(k => ({name: k, val: seg.sectors[k]})).sort((a,b) => b.val - a.val);
                 breakHtml += `
                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-                      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Segmento</div>
+                      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Segmento (${filterY === 'all' ? 'Todos' : filterY})</div>
                       <h4 class="text-sm font-black text-autumn-primary leading-tight mb-2">${seg.name}</h4>
                       <div class="text-lg font-black text-autumn-secondary mb-3">R$ ${fmtMoney(seg.val)}</div>
                       <div class="space-y-1.5 border-t border-gray-200 pt-3">
@@ -1648,18 +2106,226 @@
                    </div>
                 `;
             });
-            document.getElementById('dashSegmentBreakdown').innerHTML = breakHtml || '<div class="col-span-full text-center text-gray-400 py-4 text-xs font-bold">Nenhum segmento classificado no período.</div>';
+            document.getElementById('dashSegmentBreakdown').innerHTML = breakHtml || '<div class="col-span-full text-center text-gray-400 py-4 text-xs font-bold">Nenhum segmento classificado neste ano.</div>';
+
+            this.populateDashExplorerSegments();
+            this.renderDashExplorerResults();
+        },
+
+        // ========================================================
+        // EXPLORADOR DE SEGMENTOS X DEMANDAS X SETORES (GOVERNANÇA)
+        // ========================================================
+        populateDashExplorerSegments() {
+            const segSelect = document.getElementById('dashExpSegment');
+            if (!segSelect) return;
+            const currentVal = segSelect.value || 'all';
+
+            const allSegs = [...new Set([...state.segments, 'Pendente de Classificação'])];
+            segSelect.innerHTML = `<option value="all">Todos os Segmentos</option>` +
+                allSegs.map(s => `<option value="${s}">${s}</option>`).join('');
+
+            if ([...segSelect.options].some(o => o.value === currentVal)) {
+                segSelect.value = currentVal;
+            }
+            this.populateDashExplorerDemands();
+        },
+
+        onChangeDashExplorerSegment() {
+            this.populateDashExplorerDemands();
+            this.renderDashExplorerResults();
+        },
+
+        populateDashExplorerDemands() {
+            const filterY = document.getElementById('filterDashYear')?.value || state.activeYearPCA;
+            const selSeg = document.getElementById('dashExpSegment')?.value || 'all';
+            const demSelect = document.getElementById('dashExpDemand');
+            if (!demSelect) return;
+
+            const prevDem = demSelect.value || 'all';
+
+            let listD = state.demands;
+            if (filterY !== 'all') listD = listD.filter(d => d.yearPCA === filterY);
+            if (selSeg !== 'all') listD = listD.filter(d => d.segment === selSeg);
+
+            const uniqueItems = {};
+            listD.forEach(d => {
+                const key = (d.codeSIPAC && d.codeSIPAC !== '0') ? `SIPAC:${d.codeSIPAC}` : `TITLE:${d.title.trim().toUpperCase()}`;
+                if (!uniqueItems[key]) {
+                    const label = (d.codeSIPAC && d.codeSIPAC !== '0')
+                        ? `[SIPAC ${d.codeSIPAC}] ${d.title}`
+                        : `[Sem Código] ${d.title}`;
+                    uniqueItems[key] = { key, label };
+                }
+            });
+
+            const sortedItems = Object.values(uniqueItems).sort((a, b) => a.label.localeCompare(b.label));
+            demSelect.innerHTML = `<option value="all">Todas as Demandas (${sortedItems.length})</option>` +
+                sortedItems.map(item => `<option value="${item.key}">${item.label}</option>`).join('');
+
+            if ([...demSelect.options].some(o => o.value === prevDem)) {
+                demSelect.value = prevDem;
+            } else {
+                demSelect.value = 'all';
+            }
+        },
+
+        renderDashExplorerResults() {
+            const cont = document.getElementById('dashExplorerContainer');
+            if (!cont) return;
+
+            const filterY = document.getElementById('filterDashYear')?.value || state.activeYearPCA;
+            const selSeg = document.getElementById('dashExpSegment')?.value || 'all';
+            const selDem = document.getElementById('dashExpDemand')?.value || 'all';
+
+            let listD = state.demands;
+            if (filterY !== 'all') listD = listD.filter(d => d.yearPCA === filterY);
+            if (selSeg !== 'all') listD = listD.filter(d => d.segment === selSeg);
+            if (selDem !== 'all') {
+                listD = listD.filter(d => {
+                    const key = (d.codeSIPAC && d.codeSIPAC !== '0') ? `SIPAC:${d.codeSIPAC}` : `TITLE:${d.title.trim().toUpperCase()}`;
+                    return key === selDem;
+                });
+            }
+
+            if (listD.length === 0) {
+                cont.innerHTML = `<div class="bg-white border border-dashed border-gray-300 rounded-2xl p-8 text-center text-xs font-bold text-gray-400">Nenhuma demanda encontrada para os filtros selecionados (${filterY === 'all' ? 'Todos os Anos' : filterY}).</div>`;
+                return;
+            }
+
+            const demandGroups = {};
+            listD.forEach(d => {
+                const key = (d.codeSIPAC && d.codeSIPAC !== '0') ? `SIPAC:${d.codeSIPAC}` : `TITLE:${d.title.trim().toUpperCase()}`;
+                if (!demandGroups[key]) {
+                    demandGroups[key] = {
+                        key,
+                        sipac: d.codeSIPAC,
+                        title: d.title,
+                        segment: d.segment,
+                        unit: d.unit,
+                        totalQty: 0,
+                        totalVal: 0,
+                        requests: []
+                    };
+                }
+                demandGroups[key].totalQty += (Number(d.qty) || 0);
+                demandGroups[key].totalVal += (Number(d.total) || 0);
+                demandGroups[key].requests.push(d);
+            });
+
+            const groupsArr = Object.values(demandGroups).sort((a, b) => b.totalVal - a.totalVal);
+            const grandTotalVal = listD.reduce((acc, d) => acc + (Number(d.total) || 0), 0);
+            const uniqueSectorsCount = new Set(listD.map(d => d.sector)).size;
+
+            let html = `
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase block">Total Pedido no Filtro (${filterY === 'all' ? 'Todos' : filterY})</span>
+                    <span class="text-lg font-black text-autumn-primary">R$ ${fmtMoney(grandTotalVal)}</span>
+                  </div>
+                  <i data-lucide="coins" class="w-7 h-7 text-autumn-secondary/40"></i>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase block">Demandas / Itens Distintos</span>
+                    <span class="text-lg font-black text-gray-800">${groupsArr.length} item(ns) (${listD.length} pedidos)</span>
+                  </div>
+                  <i data-lucide="package" class="w-7 h-7 text-autumn-primary/30"></i>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase block">Setores Requisitantes</span>
+                    <span class="text-lg font-black text-autumn-secondary">${uniqueSectorsCount} setor(es)</span>
+                  </div>
+                  <i data-lucide="building-2" class="w-7 h-7 text-autumn-secondary/40"></i>
+                </div>
+              </div>
+
+              <div class="space-y-4 max-h-[550px] overflow-y-auto custom-scrollbar pr-1">
+            `;
+
+            groupsArr.forEach(g => {
+                const sectorBreakdown = {};
+                g.requests.forEach(req => {
+                    if (!sectorBreakdown[req.sector]) {
+                        sectorBreakdown[req.sector] = { sector: req.sector, qty: 0, total: 0, items: [] };
+                    }
+                    sectorBreakdown[req.sector].qty += (Number(req.qty) || 0);
+                    sectorBreakdown[req.sector].total += (Number(req.total) || 0);
+                    sectorBreakdown[req.sector].items.push(req);
+                });
+                const sectorsSorted = Object.values(sectorBreakdown).sort((a, b) => b.total - a.total);
+
+                html += `
+                  <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center gap-3 border-b border-gray-100 pb-3">
+                      <div>
+                        <div class="flex items-center gap-2 flex-wrap mb-1">
+                          <span class="font-mono text-[10px] font-black px-2 py-0.5 rounded bg-gray-100 text-gray-800 border border-gray-300">SIPAC: ${g.sipac}</span>
+                          <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-autumn-secondary/10 text-autumn-secondary border border-autumn-secondary/20">${g.segment}</span>
+                        </div>
+                        <h4 class="text-base font-black text-autumn-primary">${g.title}</h4>
+                      </div>
+                      <div class="bg-autumn-bg border border-gray-200 rounded-xl px-4 py-2 text-right flex-shrink-0">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase block">Total Consolidado na Demanda</span>
+                        <span class="text-xs font-bold text-gray-700 mr-2">${g.totalQty} ${g.unit}</span>
+                        <span class="text-base font-black text-autumn-secondary">R$ ${fmtMoney(g.totalVal)}</span>
+                      </div>
+                    </div>
+
+                    <div class="space-y-2">
+                      <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Quanto cada setor pediu nesta demanda:</span>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                        ${sectorsSorted.map(sec => {
+                            const pct = g.totalVal > 0 ? ((sec.total / g.totalVal) * 100).toFixed(1) : 0;
+                            return `
+                              <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex flex-col justify-between gap-2">
+                                <div class="flex justify-between items-center">
+                                  <span class="text-xs font-black text-gray-800 uppercase flex items-center gap-1.5">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-autumn-secondary"></i> ${sec.sector}
+                                  </span>
+                                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-white border border-gray-200 text-gray-600">${pct}% do item</span>
+                                </div>
+                                <div class="flex justify-between items-end border-t border-gray-200/70 pt-2">
+                                  <div class="text-[11px] text-gray-600">
+                                    Qtd Pedida: <strong class="text-gray-900">${sec.qty} ${g.unit}</strong>
+                                    <div class="text-[10px] text-gray-400">${sec.items.length} lançamento(s)</div>
+                                  </div>
+                                  <div class="text-right">
+                                    <div class="text-sm font-black text-autumn-primary">R$ ${fmtMoney(sec.total)}</div>
+                                    <button type="button" onclick="window.pcaApp.openViewDemandModal('${sec.items[0].id}')" class="text-[10px] font-bold text-blue-600 hover:underline">Ver pedido</button>
+                                  </div>
+                                </div>
+                              </div>
+                            `;
+                        }).join('')}
+                      </div>
+                    </div>
+                  </div>
+                `;
+            });
+
+            html += `</div>`;
+            cont.innerHTML = html;
+            lucide.createIcons();
         },
 
         saveActiveYear() {
             const newVal = document.getElementById('settingActiveYear').value;
             state.activeYearPCA = newVal;
             this.persistData();
+            if (window.cloudSyncInstance) {
+                window.cloudSyncInstance.saveMeta('config', {
+                    activeYearPCA: state.activeYearPCA,
+                    isWindowOpen: state.isWindowOpen
+                });
+            }
             
-            const demYear = document.getElementById('demYearPCA');
-            if(demYear) demYear.value = state.activeYearPCA;
-            
-            this.showToast(`Ano de planejamento restrito para ${newVal}`, 'success');
+            this.syncAllYearFiltersToActive();
+            this.setMinimumDate();
+            this.renderBudgetSettings();
+            this.renderSectorBudgetBars();
+            this.showToast(`Ano vigente alterado para ${newVal}! Todas as abas foram sincronizadas.`, 'success');
         },
 
         renderSettings() {
@@ -1672,6 +2338,10 @@
           const userSecSelect = document.getElementById('newUserSector');
           if(userSecSelect) userSecSelect.innerHTML = state.sectors.map(s => `<option value="${s}">${s}</option>`).join('');
 
+          const setYear = document.getElementById('settingActiveYear');
+          if (setYear) setYear.value = state.activeYearPCA;
+
+          this.renderBudgetSettings();
           this.renderUsersList();
           lucide.createIcons();
         },
@@ -1685,7 +2355,7 @@
             if(filtered.length === 0) {
                 secList.innerHTML = `<li class="p-2 text-center text-gray-500 font-bold italic">Nenhum setor encontrado. Aperte + para criar.</li>`;
             } else {
-                secList.innerHTML = filtered.map((s, i) => {
+                secList.innerHTML = filtered.map((s) => {
                     const origIndex = state.sectors.indexOf(s);
                     return `<li class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 font-medium text-gray-700"><span>${s}</span> <button type="button" onclick="window.pcaApp.removeSector(${origIndex})" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></li>`
                 }).join('');
@@ -1702,7 +2372,7 @@
             if(filtered.length === 0) {
                 segList.innerHTML = `<li class="p-2 text-center text-gray-500 font-bold italic">Nenhum segmento encontrado. Aperte + para criar.</li>`;
             } else {
-                segList.innerHTML = filtered.map((s, i) => {
+                segList.innerHTML = filtered.map((s) => {
                     const origIndex = state.segments.indexOf(s);
                     return `<li class="flex justify-between items-center bg-white p-2 rounded border border-gray-200 font-medium text-gray-700"><span>${s}</span> <button type="button" onclick="window.pcaApp.removeSegment(${origIndex})" class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></li>`
                 }).join('');
@@ -1835,6 +2505,7 @@
           const qty = parseInt(document.getElementById('demQty').value) || 0;
           const price = this.parseMoney(document.getElementById('demPrice').value) || 0;
           document.getElementById('demTotalDisplay').textContent = `R$ ${fmtMoney(qty * price)}`;
+          this.renderSectorBudgetBars();
         },
 
         submitDemand(e) {
@@ -1863,7 +2534,7 @@
             dateStamp: new Date().toISOString(),
             userId: state.currentUser.id,
             
-            yearPCA: document.getElementById('demYearPCA').value,
+            yearPCA: state.activeYearPCA,
             sector: document.getElementById('demSector').value,
             user: document.getElementById('demUser').value,
             cpf: cpfRaw,
@@ -1906,20 +2577,21 @@
           this.togglePriorityJust();
           this.autoFillDemandForm();
           
-          this.lastAutoFilledCode = ''; // Zera a memória para a próxima demanda
+          this.lastAutoFilledCode = '';
           
           this.showToast('Demanda submetida com sucesso!', 'success');
           this.navigate('my-demands');
         },
 
         renderMyDemands() {
+          this.renderSectorBudgetBars();
           const c = document.getElementById('myDemandsContainer');
-          const filterY = document.getElementById('filterMyYear').value;
+          const filterY = document.getElementById('filterMyYear')?.value || state.activeYearPCA;
           
-          let myD = state.demands.filter(d => d.userId === state.currentUser.id);
+          let myD = state.demands.filter(d => d.userId === state.currentUser.id || d.sector === state.currentUser.sector);
           if (filterY !== 'all') { myD = myD.filter(d => d.yearPCA === filterY); }
           
-          if(myD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda lançada para este período.</div>'; return; }
+          if(myD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda lançada para ${filterY === 'all' ? 'este período' : filterY}.</div>`; return; }
           
           let h = '';
           myD.forEach(d => {
@@ -1981,13 +2653,13 @@
 
         renderAdminInbox() {
           const c = document.getElementById('adminInboxContainer');
-          const filterY = document.getElementById('filterAdminInboxYear').value;
+          const filterY = document.getElementById('filterAdminInboxYear')?.value || state.activeYearPCA;
           
           let listD = state.demands.filter(d => d.statusPCA === 'Pendente' && d.codeSIPAC !== '0');
           if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
           listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Caixa de entrada limpa. Nenhuma demanda pendente!</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Caixa de entrada limpa para ${filterY === 'all' ? 'todos os anos' : filterY}!</div>`; return; }
           
           let h = '';
           listD.forEach(d => {
@@ -2035,11 +2707,13 @@
 
         renderAdminCatalog() {
           const c = document.getElementById('adminCatalogContainer');
+          const filterY = document.getElementById('filterCatalogYear')?.value || state.activeYearPCA;
           
           let listD = state.demands.filter(d => d.codeSIPAC === '0');
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
           listD.sort((a,b) => new Date(a.dateStamp) - new Date(b.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="col-span-1 md:col-span-2 p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda pendente de catalogação. Ótimo trabalho!</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="col-span-1 md:col-span-2 p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda pendente de catalogação em ${filterY === 'all' ? 'todos os anos' : filterY}!</div>`; return; }
           
           let h = '';
           listD.forEach(d => {
@@ -2049,6 +2723,7 @@
               <div class="border border-blue-200 rounded-2xl p-4 bg-blue-50/30 flex flex-col justify-between shadow-sm">
                 <div>
                     <div class="flex items-center gap-2 mb-2">
+                      <span class="font-mono text-[10px] font-black text-gray-700 bg-gray-100 px-2 py-0.5 rounded border border-gray-300">${d.yearPCA}</span>
                       <span class="font-mono text-[10px] font-black text-blue-700 bg-blue-100 px-2 py-0.5 rounded border border-blue-200">${d.id.replace('REQ-', '')}</span>
                       <span class="text-[10px] font-bold text-gray-600 uppercase">${d.sector}</span>
                     </div>
@@ -2086,8 +2761,8 @@
 
         renderAdminApproved() {
           const c = document.getElementById('adminApprovedContainer');
-          const filterY = document.getElementById('filterAdminApprovedYear').value;
-          const filterS = document.getElementById('filterAdminApprovedSector').value;
+          const filterY = document.getElementById('filterAdminApprovedYear')?.value || state.activeYearPCA;
+          const filterS = document.getElementById('filterAdminApprovedSector')?.value || 'all';
           
           let listD = state.demands.filter(d => d.statusPCA === 'Deferido' && d.codeSIPAC !== '0');
           
@@ -2096,7 +2771,7 @@
           
           listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda aprovada encontrada com os filtros selecionados.</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda aprovada encontrada em ${filterY === 'all' ? 'todos os anos' : filterY}.</div>`; return; }
           
           let h = '';
           listD.forEach(d => {
@@ -2144,9 +2819,9 @@
 
         renderAdminRejected() {
           const c = document.getElementById('adminRejectedContainer');
-          const filterY = document.getElementById('filterRejYear').value;
-          const filterS = document.getElementById('filterRejSector').value;
-          const filterSeg = document.getElementById('filterRejSegment').value;
+          const filterY = document.getElementById('filterRejYear')?.value || state.activeYearPCA;
+          const filterS = document.getElementById('filterRejSector')?.value || 'all';
+          const filterSeg = document.getElementById('filterRejSegment')?.value || 'all';
           
           let listD = state.demands.filter(d => (d.statusPCA.includes('Não Cadastrar') || d.statusPCA.includes('Indeferido')) && d.codeSIPAC !== '0');
           
@@ -2156,7 +2831,7 @@
           
           listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda indeferida com os filtros selecionados.</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda indeferida em ${filterY === 'all' ? 'todos os anos' : filterY}.</div>`; return; }
           
           let h = '';
           listD.forEach(d => {
@@ -2192,9 +2867,9 @@
 
         renderAdminRoutings() {
           const c = document.getElementById('adminRoutingsContainer');
-          const filterY = document.getElementById('filterRoutYear').value;
-          const filterS = document.getElementById('filterRoutSector').value;
-          const filterT = document.getElementById('filterRoutType').value;
+          const filterY = document.getElementById('filterRoutYear')?.value || state.activeYearPCA;
+          const filterS = document.getElementById('filterRoutSector')?.value || 'all';
+          const filterT = document.getElementById('filterRoutType')?.value || 'all';
           
           let listD = state.demands.filter(d => d.statusPCA === 'Outro Encaminhamento' && d.codeSIPAC !== '0');
           
@@ -2204,7 +2879,7 @@
           
           listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda encaminhada encontrada com os filtros selecionados.</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda redirecionada em ${filterY === 'all' ? 'todos os anos' : filterY}.</div>`; return; }
           
           let h = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
           listD.forEach(d => {
@@ -2250,8 +2925,8 @@
 
         renderAdminSegments() {
           const c = document.getElementById('adminSegmentsContainer');
-          const filterY = document.getElementById('filterSegYear').value;
-          const filterGrp = document.getElementById('filterSegGroup').value;
+          const filterY = document.getElementById('filterSegYear')?.value || state.activeYearPCA;
+          const filterGrp = document.getElementById('filterSegGroup')?.value || 'all';
           
           let listD = state.demands.filter(d => d.segment !== 'Pendente de Classificação' && d.codeSIPAC !== '0');
           if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
@@ -2286,7 +2961,7 @@
               finalGroups = finalGroups.filter(g => g.segment === filterGrp); 
           }
           
-          if(finalGroups.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda classificada encontrada para este filtro.</div>'; return; }
+          if(finalGroups.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda classificada encontrada para ${filterY === 'all' ? 'este filtro' : filterY}.</div>`; return; }
           
           const sortedGroups = finalGroups.sort((a, b) => b.totalValue - a.totalValue);
 
@@ -2303,7 +2978,7 @@
                       <h4 class="text-base font-black text-gray-900 line-clamp-2 leading-tight">${group.title}</h4>
                   </div>
                   <div class="md:text-right flex flex-col justify-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
-                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Consolidado (Todas as Demandas)</span>
+                      <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">Consolidado (${filterY === 'all' ? 'Todos' : filterY})</span>
                       <div class="text-xs font-bold text-gray-700">${group.totalQty} ${group.unit}</div>
                       <div class="text-xl font-black text-autumn-secondary mt-0.5">R$ ${fmtMoney(group.totalValue)}</div>
                   </div>
@@ -2334,13 +3009,15 @@
 
         renderAdminTracking() {
           const c = document.getElementById('adminTrackingContainer');
-          const filterS = document.getElementById('filterTrackSector').value;
+          const filterY = document.getElementById('filterTrackYear')?.value || state.activeYearPCA;
+          const filterS = document.getElementById('filterTrackSector')?.value || 'all';
           
           let listD = state.demands.filter(d => d.codeSIPAC !== '0');
+          if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
           if (filterS !== 'all') { listD = listD.filter(d => d.sector === filterS); }
           listD.sort((a,b) => new Date(b.dateStamp) - new Date(a.dateStamp));
 
-          if(listD.length === 0) { c.innerHTML = '<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda para este setor.</div>'; return; }
+          if(listD.length === 0) { c.innerHTML = `<div class="p-8 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border border-dashed border-gray-300">Nenhuma demanda encontrada para ${filterY === 'all' ? 'este filtro' : filterY}.</div>`; return; }
           
           let h = '';
           listD.forEach(d => {
@@ -2356,7 +3033,8 @@
              h += `
               <div class="border border-gray-300 rounded-2xl p-4 bg-white shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                      <span class="font-mono text-[10px] font-black text-gray-700 bg-gray-100 px-2 py-0.5 rounded border border-gray-300">${d.yearPCA}</span>
                       <span class="font-mono text-[10px] font-black text-autumn-primary bg-gray-100 px-2 py-0.5 rounded border border-gray-200">${d.id.replace('REQ-', '')}</span>
                       <span class="text-[10px] font-bold text-gray-600 uppercase">${d.sector}</span>
                       <span class="inline-flex items-center text-[10px] font-black px-2 py-0.5 rounded border uppercase ${execBadge}" id="badgeExec_${d.id}">${d.executionStatus}</span>
@@ -2553,7 +3231,8 @@
             if(!d) return;
             
             document.getElementById('vdYear').textContent = d.yearPCA;
-            document.getElementById('vdId').textContent = d.id.replace('REQ-', '');
+            const vdIdEl = document.getElementById('vdId');
+            if (vdIdEl) vdIdEl.textContent = '#' + d.id.replace('REQ-', '');
             document.getElementById('vdTitle').textContent = d.title;
             document.getElementById('vdSector').textContent = d.sector;
             document.getElementById('vdUser').textContent = d.user;
@@ -2585,7 +3264,7 @@
 
         exportPCAExcel() {
           if (typeof XLSX === 'undefined') return this.showToast('Biblioteca Excel não carregada.', 'alert');
-          const filterY = document.getElementById('filterAdminApprovedYear').value;
+          const filterY = document.getElementById('filterAdminApprovedYear')?.value || state.activeYearPCA;
           
           let listD = state.demands.filter(d => d.statusPCA === 'Deferido' && d.codeSIPAC !== '0');
           if (filterY !== 'all') { listD = listD.filter(d => d.yearPCA === filterY); }
