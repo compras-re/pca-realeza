@@ -1165,13 +1165,11 @@
             };
             
             onSnapshot(collection(db,'pca_demands'), s=>{ 
-                if(!s.empty){ 
-                    state.demands=[]; 
-                    s.forEach(d=>state.demands.push(d.data())); 
-                    state.demands.sort((a,b)=>new Date(b.dateStamp)-new Date(a.dateStamp)); 
-                    pcaApp.persistData(); 
-                    pcaApp.refreshCurrentView();
-                } 
+                state.demands=[]; 
+                s.forEach(d=>state.demands.push(d.data())); 
+                state.demands.sort((a,b)=>new Date(b.dateStamp)-new Date(a.dateStamp)); 
+                pcaApp.persistData(); 
+                pcaApp.refreshCurrentView();
             });
 
             onSnapshot(collection(db,'pca_users'), s=>{ 
