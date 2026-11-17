@@ -714,6 +714,28 @@
 
         <!-- VIEW 6: CONFIGURAÇÕES (ADMIN) -->
         <div id="view-admin-settings" class="space-y-6 hidden">
+          <!-- CARD DE CONTINGÊNCIA: BACKUP E RESTAURAÇÃO TOTAL -->
+          <div class="bg-amber-50/70 rounded-3xl p-6 border border-amber-200 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase mb-1 border border-amber-300">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Segurança e Contingência
+              </div>
+              <h2 class="text-lg font-black text-autumn-primary">Central de Backup e Recuperação de Dados</h2>
+              <p class="text-xs text-gray-600 mt-0.5">Gere cópias de segurança completas (Demandas, Usuários, Setores e Orçamentos) ou restaure o sistema em caso de falha.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+              <button type="button" onclick="window.pcaApp.exportFullBackupJSON()" class="bg-autumn-primary hover:bg-autumn-primaryHover text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="database-backup" class="w-4 h-4"></i> Baixar Backup Total (.JSON)
+              </button>
+              <button type="button" onclick="window.pcaApp.exportFullBackupExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Baixar Tudo em Excel (.XLSX)
+              </button>
+              <label class="bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <i data-lucide="upload-cloud" class="w-4 h-4 text-autumn-secondary"></i> Restaurar Backup (.JSON)
+                <input type="file" accept=".json" onchange="window.pcaApp.restoreFullBackupJSON(event)" class="hidden">
+              </label>
+            </div>
+          </div>
           <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
@@ -3259,7 +3281,143 @@
         closeViewDemandModal() {
             document.getElementById('viewDemandModal').classList.add('hidden');
         },
+// ========================================================
+        // SISTEMA DE CONTINGÊNCIA: BACKUP E RESTAURAÇÃO COMPLETA
+        // ========================================================
+        exportFullBackupJSON() {
+          const backupPayload = {
+            version: "1.0",
+            exportedAt: new Date().toISOString(),
+            activeYearPCA: state.activeYearPCA,
+            isWindowOpen: state.isWindowOpen,
+            sectors: state.sectors,
+            segments: state.segments,
+            budgets: state.budgets,
+            users: state.users,
+            demands: state.demands
+          };
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupPayload, null, 2));
+          const a = document.createElement('a');
+          a.setAttribute("href", dataStr);
+          a.setAttribute("download", `BACKUP_TOTAL_PCA_REALEZA_${new Date().toISOString().slice(0,10)}.json`);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          this.showToast('Backup completo (.JSON) baixado com sucesso!', 'success');
+        },
 
+        exportFullBackupExcel() {
+          if (typeof XLSX === 'undefined') return this.showToast('Biblioteca Excel não carregada.', 'alert');
+          const wb = XLSX.utils.book_new();
+
+          // Aba 1: Todas as Demandas (Qualquer status e qualquer ano)
+          const demandsRows = state.demands.map(d => ({
+            "ID Pedido": d.id,
+            "Data Registro": d.dateStamp,
+            "Ano PCA": d.yearPCA,
+            "Setor": d.sector,
+            "Servidor": d.user,
+            "CPF": d.cpf,
+            "Cód. SIPAC": d.codeSIPAC,
+            "Título / Item": d.title,
+            "Descrição Completa": d.desc,
+            "Unidade": d.unit,
+            "Quantidade": d.qty,
+            "Valor Unit. (R$)": d.price,
+            "Valor Total (R$)": d.total,
+            "Prioridade": d.priority,
+            "Data Desejada": d.dateNeed,
+            "Justificativa Prioridade": d.prioJust,
+            "Justificativa Necessidade": d.needJust,
+            "Link Referência": d.link,
+            "Segmento": d.segment,
+            "Status Classificação PCA": d.statusPCA,
+            "Nº DFD": d.dfd,
+            "Motivo Indeferimento": d.pcaFeedback,
+            "Redirecionamento": d.routingDetail,
+            "Status Execução": d.executionStatus,
+            "Motivo Não Execução": d.executionReason
+          }));
+          const wsDemands = XLSX.utils.json_to_sheet(demandsRows.length ? demandsRows : [{"Aviso": "Nenhuma demanda cadastrada"}]);
+          XLSX.utils.book_append_sheet(wb, wsDemands, "Todas_as_Demandas");
+
+          // Aba 2: Usuários Cadastrados
+          const usersRows = state.users.map(u => ({
+            "ID": u.id, "Nome": u.name, "SIAPE (Login)": u.login, "Senha": u.password, "CPF": u.cpf, "Setor": u.sector, "Perfil": u.role
+          }));
+          const wsUsers = XLSX.utils.json_to_sheet(usersRows);
+          XLSX.utils.book_append_sheet(wb, wsUsers, "Usuarios");
+
+          // Aba 3: Limites Orçamentários
+          const budgetRows = [];
+          Object.keys(state.budgets || {}).forEach(year => {
+            Object.keys(state.budgets[year] || {}).forEach(sec => {
+              budgetRows.push({ "Ano PCA": year, "Setor": sec, "Limite Estipulado (R$)": state.budgets[year][sec] });
+            });
+          });
+          const wsBudgets = XLSX.utils.json_to_sheet(budgetRows.length ? budgetRows : [{"Aviso": "Nenhum limite cadastrado"}]);
+          XLSX.utils.book_append_sheet(wb, wsBudgets, "Limites_Orcamentarios");
+
+          XLSX.writeFile(wb, `CONTINGENCIA_GERAL_PCA_${new Date().toISOString().slice(0,10)}.xlsx`);
+          this.showToast('Planilha completa de contingência gerada!', 'success');
+        },
+
+        async restoreFullBackupJSON(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+          if (!confirm("ATENÇÃO: Deseja restaurar este arquivo de Backup? Os dados contidos nele serão carregados no sistema e sincronizados com a nuvem.")) {
+            event.target.value = '';
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            try {
+              const data = JSON.parse(e.target.result);
+              if (!data.users || !Array.isArray(data.demands)) {
+                throw new Error("Formato de arquivo inválido.");
+              }
+
+              if (data.activeYearPCA) state.activeYearPCA = data.activeYearPCA;
+              if (typeof data.isWindowOpen === 'boolean') state.isWindowOpen = data.isWindowOpen;
+              if (Array.isArray(data.sectors)) state.sectors = data.sectors;
+              if (Array.isArray(data.segments)) state.segments = data.segments;
+              if (data.budgets) state.budgets = data.budgets;
+              state.users = data.users;
+              state.demands = data.demands;
+
+              this.persistData();
+
+              // Repopula o Firebase automaticamente
+              if (window.cloudSyncInstance) {
+                await window.cloudSyncInstance.saveMeta('sectors', state.sectors);
+                await window.cloudSyncInstance.saveMeta('segments', state.segments);
+                await window.cloudSyncInstance.saveMeta('budgets', state.budgets);
+                await window.cloudSyncInstance.saveMeta('config', {
+                  activeYearPCA: state.activeYearPCA,
+                  isWindowOpen: state.isWindowOpen
+                });
+                for (const u of state.users) {
+                  await window.cloudSyncInstance.saveUser(u);
+                }
+                for (const d of state.demands) {
+                  await window.cloudSyncInstance.saveDemand(d);
+                }
+              }
+
+              this.populateSelects();
+              this.syncAllYearFiltersToActive();
+              this.refreshCurrentView();
+              this.showToast('Backup restaurado e sincronizado na nuvem com sucesso!', 'success');
+            } catch (err) {
+              console.error(err);
+              this.showToast('Erro ao ler o arquivo de backup. Verifique se é um .JSON válido.', 'alert');
+            } finally {
+              event.target.value = '';
+            }
+          };
+          reader.readAsText(file);
+        },
         exportPCAExcel() {
           if (typeof XLSX === 'undefined') return this.showToast('Biblioteca Excel não carregada.', 'alert');
           const filterY = document.getElementById('filterAdminApprovedYear')?.value || state.activeYearPCA;
